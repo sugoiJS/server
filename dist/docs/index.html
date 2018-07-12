@@ -1,0 +1,275 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@sugoi/server</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@sugoi/server</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> @sugoi/server</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="-sugoi-server">@Sugoi/server</h1>
+				<h2 id="introduction">Introduction</h2>
+				<p>Sugoi server module is part of the modular Sugoi framework.</p>
+				<p>The server module can be use as stand alone library.</p>
+				<p>This module provide singleton services and decorators.</p>
+				<p>Sugoi server use <a href="https://www.npmjs.com/package/inversify">inversify</a> and <a href="https://www.npmjs.com/package/inversify-express-utils">inversify-express-utils</a> and re-export those modules</p>
+				<h2 id="installation">Installation</h2>
+				<p> For installing the Sugoi/server module run:</p>
+				<blockquote>
+					<p>npm install --save @sugoi/server @sugoi/core</p>
+				</blockquote>
+				<h3 id="set-controller">Set controller</h3>
+				<pre><code><span class="hljs-keyword">import</span> {controller,response,httpGet,requestParam} from <span class="hljs-string">"@sugoi/server"</span>;
+
+<span class="hljs-meta">@controller(<span class="hljs-meta-string">'/dashboard'</span>)</span>
+export <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CoreController</span></span>{
+    <span class="hljs-keyword">constructor</span>(){}
+
+    <span class="hljs-meta">@httpGet(<span class="hljs-meta-string">"/:role"</span>)</span>
+    test(<span class="hljs-meta">@response()</span> response,<span class="hljs-meta">@requestParam(<span class="hljs-meta-string">'role'</span>)</span> role){
+        <span class="hljs-keyword">if</span>(role === <span class="hljs-string">"user"</span> )
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"authorized"</span>;
+        <span class="hljs-keyword">else</span>{
+            <span class="hljs-keyword">throw</span> new Error(<span class="hljs-string">"unauthorized"</span>)
+        }
+    }
+}
+</code></pre><h3 id="set-service">Set service</h3>
+				<p> Service can be any class you want with no special deorators.</p>
+				<h3 id="set-module">Set module</h3>
+				<p>  for setting module you should use the @SugModule annotation</p>
+				<pre><code><span class="hljs-keyword">import</span> {SugModule} <span class="hljs-keyword">from</span> <span class="hljs-string">"@sugoi/server"</span>
+
+<span class="hljs-meta">@SugModule</span>({
+    controllers:[CoreController],
+    services: [CoreService],
+    modules:[LoginModule,DashboardModule]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ServerModule{
+    <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>){}
+}
+</code></pre><h3 id="bootstrapping">Bootstrapping</h3>
+				<p>For bootstrapping we will use the init method</p>
+				<blockquote>
+					<p>init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider, container?: inversify.Container)</p>
+				</blockquote>
+				<blockquote>
+					<p>boostrapModule - Entry point module</p>
+				</blockquote>
+				<blockquote>
+					<p>rootPath - Server uri prefix</p>
+				</blockquote>
+				<pre><code><span class="hljs-keyword">import</span> {HttpServer} <span class="hljs-keyword">from</span> <span class="hljs-string">"@sugoi/server"</span>;
+
+<span class="hljs-keyword">const</span> server:HttpServer = HttpServer.init(ServerModule,<span class="hljs-string">"/api"</span>);
+</code></pre><h3 id="setting-middlewares-and-error-handlers">Setting middlewares and Error handlers</h3>
+				<p>For setting middlewares  we will use</p>
+				<blockquote>
+					<p>  setMiddlewares(...(app)=&gt;void)</p>
+				</blockquote>
+				<p>For setting error handlers we will use</p>
+				<blockquote>
+					<p>  setErrorHandlers((app) =&gt; void)</p>
+				</blockquote>
+				<pre><code>(&lt;HttpServer&gt;server).setMiddlewares((<span class="hljs-keyword">app</span>) =&gt; {
+        <span class="hljs-keyword">app</span>.<span class="hljs-keyword">use</span>(bodyParser.json());
+        <span class="hljs-keyword">app</span>.<span class="hljs-keyword">use</span>(compression());
+        <span class="hljs-keyword">if</span> (DEVELOPMENT) {
+            <span class="hljs-keyword">app</span>.<span class="hljs-keyword">set</span>('json spaces', 2);
+
+            <span class="hljs-keyword">app</span>.<span class="hljs-keyword">use</span>(cors());
+            <span class="hljs-keyword">app</span>.<span class="hljs-keyword">use</span>(require('morgan')('dev'));
+        }
+        <span class="hljs-keyword">app</span>.<span class="hljs-keyword">use</span>(express.static(paths.static));
+
+    })
+    .setErrorHandlers((<span class="hljs-keyword">app</span>) =&gt; {
+        <span class="hljs-keyword">app</span>.<span class="hljs-keyword">use</span>(function (req, res, next) {
+            <span class="hljs-keyword">return</span> res.sendFile(path.resolve(paths.index))
+        });
+        <span class="hljs-keyword">app</span>.<span class="hljs-keyword">use</span>((req,res,next)=&gt;{
+            <span class="hljs-keyword">return</span> function(<span class="hljs-keyword">err</span>){
+                <span class="hljs-keyword">if</span>(<span class="hljs-keyword">err</span> instanceof SugoiServerError){
+                    console.<span class="hljs-keyword">log</span>.<span class="hljs-keyword">error</span>(<span class="hljs-keyword">err</span>.<span class="hljs-keyword">stack</span>);
+                    console.<span class="hljs-keyword">log</span>.<span class="hljs-keyword">error</span>(`<span class="hljs-variable">${err</span>.message} <span class="hljs-variable">${JSON</span>.stringify(<span class="hljs-keyword">err</span>.data)});
+                    res.status(500).send(<span class="hljs-string">"Internal error"</span>);
+                }
+            }
+        });
+    });
+</code></pre><h3 id="build-listening">Build &amp; listening</h3>
+				<p>After setting the middlewares and error handlers we can build and listen to request by:</p>
+				<pre><code>(&lt;HttpServer&gt;server).build(PORT)
+    .listen(PORT, <span class="hljs-function"><span class="hljs-params">(<span class="hljs-built_in">error</span>: Error)</span> =&gt;</span> {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">error</span>) {
+            logger.<span class="hljs-built_in">error</span>(<span class="hljs-built_in">error</span>.message);
+            throw <span class="hljs-built_in">error</span>;
+        }
+        logger.<span class="hljs-built_in">debug</span>(`Server running @ ${HOST}:${PORT}`);
+    });
+</code></pre><p>This call will return http.Server instance which can be use for setting app variables, socket server and more.</p>
+				<h2 id="documentation">Documentation</h2>
+				<p>You can find further information on <a href="http://www.sugoijs.com">Sugoi official website</a></p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="classes/authprovider.html" class="tsd-kind-icon">Auth<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/httpserver.html" class="tsd-kind-icon">Http<wbr>Server</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/sugoiservererror.html" class="tsd-kind-icon">Sugoi<wbr>Server<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/imodulemetadata.html" class="tsd-kind-icon">IModule<wbr>Metadata</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/moduleitem.html" class="tsd-kind-icon">Module<wbr>Item</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#iexpresscallback" class="tsd-kind-icon">IExpress<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#modulemetakey" class="tsd-kind-icon">Module<wbr>Meta<wbr>Key</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#sugoi_icon" class="tsd-kind-icon">SUGOI_<wbr>ICON</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#exceptions" class="tsd-kind-icon">EXCEPTIONS</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer>
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

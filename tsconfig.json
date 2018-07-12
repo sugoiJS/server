@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist"                        /* Redirect output structure to the directory. */
+  },
+  "typeRoots": [
+    "./node_modules/@types"
+  ]
+}

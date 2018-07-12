@@ -1,0 +1,36 @@
+{
+  "name": "@sugoi/server",
+  "version": "1.0.10",
+  "description": "sugoi framework server module, relays on express and inversify",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs": "..\\node_modules\\.bin\\typedoc --out ..\\dist\\docs\\server --excludeNotExported --excludeProtected --excludePrivate --readme .\\README.md --mode file --hideGenerator",    "update:patch": "rmdir /S dist && tsc && npm version patch && npm publish && npm run docs",
+    "update:minor": "rmdir /S dist && tsc && npm version minor && npm publish && npm run docs",
+    "update:major": "rmdir /S dist && tsc && npm version major && npm publish && npm run docs"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "keywords": [
+    "sugoi",
+    "@sugoi",
+    "server",
+    "inversify",
+    "decorator",
+    "express"
+  ],
+  "author": "Orel Balilti",
+  "license": "MIT",
+  "dependencies": {
+    "@sugoi/core": "^1.0.6",
+    "express": "^4.16.3",
+    "inversify-express-utils": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.0",
+    "@types/node": "^10.3.2",
+    "typedoc": "^0.11.1"
+  }
+}
