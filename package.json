@@ -1,14 +1,16 @@
 {
   "name": "@sugoi/server",
-  "version": "1.0.10",
+  "version": "1.2.1",
   "description": "sugoi framework server module, relays on express and inversify",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docs": "..\\node_modules\\.bin\\typedoc --out ..\\dist\\docs\\server --excludeNotExported --excludeProtected --excludePrivate --readme .\\README.md --mode file --hideGenerator",    "update:patch": "rmdir /S dist && tsc && npm version patch && npm publish && npm run docs",
-    "update:minor": "rmdir /S dist && tsc && npm version minor && npm publish && npm run docs",
-    "update:major": "rmdir /S dist && tsc && npm version major && npm publish && npm run docs"
+    "docs": "..\\node_modules\\.bin\\typedoc --out ..\\dist\\docs\\server --json dist\\docs\\main.json --ignoreCompilerErrors --excludeNotExported --excludeProtected --excludePrivate --readme .\\README.md --mode file --hideGenerator --gitRevision '1.0.0' --externalPattern node_modules/**/* --excludeExternals",
+    "update:patch": " npm run build && npm version patch && npm publish && npm run docs",
+    "update:minor": " npm run build && npm version minor && npm publish && npm run docs",
+    "update:major": " npm run build && npm version major && npm publish && npm run docs",
+    "build": "rmdir /S dist && tsc"
   },
   "files": [
     "dist/**/*"
@@ -19,12 +21,13 @@
     "server",
     "inversify",
     "decorator",
+    "annotation",
     "express"
   ],
   "author": "Orel Balilti",
   "license": "MIT",
   "dependencies": {
-    "@sugoi/core": "^1.0.6",
+    "@sugoi/core": "^1.2.0",
     "express": "^4.16.3",
     "inversify-express-utils": "^6.0.0"
   },

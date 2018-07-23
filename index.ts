@@ -1,4 +1,6 @@
 
+export {ResponseMessage} from "./classes/response-message";
+
 export {SugModule} from "./decorators/sug-module.decorator";
 
 export {ModuleMetaKey} from "./constants/meta-key";

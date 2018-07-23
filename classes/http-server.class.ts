@@ -4,6 +4,7 @@ import {IModuleMetadata} from "../interfaces/module-meta.interface";
 import {SugoiServerError} from "../exceptions/server.exception";
 import {EXCEPTIONS} from "../constants/exceptions.constant";
 import {ModuleMetaKey} from "../constants/meta-key";
+import * as express from "express";
 import {Application} from "express";
 import {AuthProvider} from "./auth-provider.class";
 import {Server} from "http";
@@ -72,7 +73,7 @@ export class HttpServer {
         if (HttpServer.serverInstances.has(moduleMetaKey)) {
             return HttpServer.serverInstances.get(moduleMetaKey)
         } else {
-            const server = new HttpServer(rootPath, container, moduleMetaKey,bootstrapModule, authProvider);
+            const server = new HttpServer(rootPath, container, moduleMetaKey, bootstrapModule, authProvider);
             HttpServer.serverInstances.set(moduleMetaKey, server);
             return server;
         }
@@ -106,6 +107,20 @@ export class HttpServer {
     }
 
     /**
+     * set static file handler
+     *
+     * @param {string} pathToStatic - path to your static files
+     * @param {string} route - path to use as route - ex. app.use(path,()=>void)
+     */
+    public setStatic(pathToStatic: string,route?:string) {
+        const cb = (app) => route
+            ? app.use(route, express.static(pathToStatic))
+            : app.use(express.static(pathToStatic));
+        this.middlewares.push(cb);
+        return this
+    }
+
+    /**
      * set all the functions which should be used as error handlers for each request
      *
      * @param {IExpressCallback} handlers
@@ -123,7 +138,7 @@ export class HttpServer {
      * @param {number} port
      * @returns {any}
      */
-    public build(port: number){
+    public build(port: number) {
 
         if (this.httpListeners.has(port)) {
             return this.httpListeners.get(port);
@@ -155,8 +170,8 @@ export class HttpServer {
         const server = this.httpListeners.has(port)
             ? this.httpListeners.get(port).listen(port, callback)
             : null;
-        return server.listen(port,null,err=>{
-            if(!err){
+        return server.listen(port, null, err => {
+            if (!err) {
                 console.log(SUGOI_ICON);
             }
             callback(err);
@@ -173,12 +188,12 @@ export class HttpServer {
         rootModuleMeta.modules = rootModuleMeta.modules || [];
         for (const mod of rootModuleMeta.modules) {
             const metadata = Reflect.getMetadata(this.moduleMetaKey, mod);
-            const {services,modules} = metadata;
+            const {services, modules} = metadata;
             for (const service of services) {
                 container.bind(service).to(service);
             }
             if (modules)
-                modules.forEach(subModule=>this.loadModules(subModule, container));
+                modules.forEach(subModule => this.loadModules(subModule, container));
         }
     }
 
