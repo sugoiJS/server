@@ -66,13 +66,15 @@ For bootstrapping we will use the init method
     const server:HttpServer = HttpServer.init(ServerModule,"/api");
 
 ### Setting middlewares and Error handlers
-For setting static file serving use
-
->   setStatic(pathToStatic:string,route?:string)
-
 For setting middlewares  we will use
 
 >   setMiddlewares(...(app)=>void)
+
+For setting static file serving use -
+should set after "setMiddlewares"
+and before "setErrorHandlers"
+
+>   setStatic(pathToStatic:string,route?:string)
 
 For setting error handlers we will use
 
@@ -80,8 +82,6 @@ For setting error handlers we will use
 
 
     (<HttpServer>server)
-        .setStatic("assets/admin","/admin")
-        .setStatic("assets/main")
         .setMiddlewares((app) => {
             app.use(bodyParser.json());
             app.use(compression());
@@ -94,6 +94,8 @@ For setting error handlers we will use
             app.use(express.static(paths.static));
 
         })
+        .setStatic("assets/admin","/admin")
+        .setStatic("assets/main")
         .setErrorHandlers((app) => {
             app.use(function (req, res, next) {
                 return res.sendFile(path.resolve(paths.index))
