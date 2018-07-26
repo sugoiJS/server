@@ -14,6 +14,7 @@ import {Container} from '@sugoi/core';
 export class HttpServer {
     private static serverInstances: Map<string, HttpServer> = new Map();
     private middlewares: Array<IExpressCallback> = [];
+    private viewMiddleware: Array<IExpressCallback> = [];
     private handlers: Array<IExpressCallback> = [(app) => app.use(function (err) {
         throw new SugoiServerError(EXCEPTIONS.GENERAL_SERVER_ERROR.message, EXCEPTIONS.GENERAL_SERVER_ERROR.code, err)
     })];
@@ -116,7 +117,7 @@ export class HttpServer {
         const cb = (app) => route
             ? app.use(route, express.static(pathToStatic))
             : app.use(express.static(pathToStatic));
-        this.middlewares.push(cb);
+        this.viewMiddleware.splice(0,0,cb);
         return this
     }
 
@@ -146,10 +147,11 @@ export class HttpServer {
         const that = this;
         const httpInstance = this.serverInstance
             .setConfig(app => {
-                that.middlewares.forEach(middleware => middleware(app))
+                that.middlewares.forEach(middleware => middleware(app));
+                that.viewMiddleware.forEach(middleware => middleware(app));
             })
             .setErrorConfig(app => {
-                that.handlers.forEach(middleware => middleware(app))
+                that.handlers.forEach(middleware => middleware(app));
             })
             .build();
         this.httpListeners.set(port, httpInstance);
