@@ -27,7 +27,7 @@ export class HttpServer {
      * @returns {string}
      */
     public get rootPath(): string {
-        return this._rootPath
+        return this._rootPath;
     };
 
 
