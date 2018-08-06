@@ -1,4 +1,4 @@
-import {Guard,TGuadian} from "../classes/guard.class";
+import {Guard,TGuardian} from "../classes/guard.class";
 
 const Guardian = function(bodySchema:{[property:string]:any},
                           paramsSchema:{[parameter:string]:any},
@@ -12,7 +12,7 @@ const Guardian = function(bodySchema:{[property:string]:any},
 };
 
 const Guarded = function(guardian: Function|string){
-    return async function (target: Object) {
+    return async function (target:any) {
         const name = typeof guardian === "function"
             ? guardian.constructor.name
             : guardian;

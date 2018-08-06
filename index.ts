@@ -1,4 +1,10 @@
 
+export {Guarded} from "./decorators/guard.decorator";
+
+export {Guardian} from "./decorators/guard.decorator";
+
+export {TGuardian} from "./classes/guard.class";
+
 export {ResponseMessage} from "./classes/response-message";
 
 export {SugModule} from "./decorators/sug-module.decorator";

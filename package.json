@@ -1,6 +1,6 @@
 {
   "name": "@sugoi/server",
-  "version": "1.2.3",
+  "version": "1.2.3-b1",
   "description": "sugoi framework server module, relays on express and inversify",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,7 +29,8 @@
   "dependencies": {
     "@sugoi/core": "^1.2.0",
     "express": "^4.16.3",
-    "inversify-express-utils": "^6.0.0"
+    "inversify-express-utils": "^6.0.0",
+    "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",
