@@ -16,7 +16,12 @@ import { controller,
     requestHeaders,
     cookies,
     next,
-    injectHttpContext } from "inversify-express-utils";
+    injectHttpContext,
+    getRouteInfo,
+    BaseMiddleware,
+    BaseHttpController,
+    TYPE
+} from "inversify-express-utils";
 export { expressUtils,
     controller,
     httpMethod,
@@ -35,4 +40,9 @@ export { expressUtils,
     requestHeaders,
     cookies,
     next,
-    injectHttpContext};
+    injectHttpContext,
+    getRouteInfo,
+    BaseMiddleware,
+    BaseHttpController,
+    TYPE
+};

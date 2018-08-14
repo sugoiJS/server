@@ -1,9 +1,10 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var inversify_express_utils_1 = require("inversify-express-utils");
 var server_exception_1 = require("../exceptions/server.exception");
 var exceptions_constant_1 = require("../constants/exceptions.constant");
 var meta_key_1 = require("../constants/meta-key");
+var express = require("express");
 var icons_1 = require("../constants/icons");
 var core_1 = require("@sugoi/core");
 var HttpServer = /** @class */ (function () {
@@ -19,6 +20,7 @@ var HttpServer = /** @class */ (function () {
      */
     function HttpServer(rootPath, container, moduleMetaKey, module, authProvider) {
         this.middlewares = [];
+        this.viewMiddleware = [];
         this.handlers = [function (app) { return app.use(function (err) {
                 throw new server_exception_1.SugoiServerError(exceptions_constant_1.EXCEPTIONS.GENERAL_SERVER_ERROR.message, exceptions_constant_1.EXCEPTIONS.GENERAL_SERVER_ERROR.code, err);
             }); }];
@@ -43,18 +45,18 @@ var HttpServer = /** @class */ (function () {
     /**
      * Initialize the application by creating new httpServer.
      *
-     * A bootstrap module (boostrapModule) should be decorated with SugModule with 'modules' property
+     * A bootstrap module (boostrapModule) should be decorated with SugModule and 'modules' property
      * which contains all of the related modules.
      * Depended on moduleMetaKey for separate applications.
      *
-     * @param boostrapModule - the root module which use as entry point
+     * @param bootstrapModule - the root module which use as entry point
      * @param {string} rootPath - the prefix for all of the routes
      * @param {string} moduleMetaKey - related to SugModule metaKey
      * @param {AuthProvider} authProvider -
      * @param {Container} container - the inversify Container which will be use to for binding the services
      * @returns {HttpServer}
      */
-    HttpServer.init = function (boostrapModule, rootPath, moduleMetaKey, authProvider, container) {
+    HttpServer.init = function (bootstrapModule, rootPath, moduleMetaKey, authProvider, container) {
         if (rootPath === void 0) { rootPath = "/"; }
         if (moduleMetaKey === void 0) { moduleMetaKey = meta_key_1.ModuleMetaKey; }
         if (authProvider === void 0) { authProvider = null; }
@@ -63,7 +65,7 @@ var HttpServer = /** @class */ (function () {
             return HttpServer.serverInstances.get(moduleMetaKey);
         }
         else {
-            var server = new HttpServer(rootPath, container, moduleMetaKey, boostrapModule, authProvider);
+            var server = new HttpServer(rootPath, container, moduleMetaKey, bootstrapModule, authProvider);
             HttpServer.serverInstances.set(moduleMetaKey, server);
             return server;
         }
@@ -96,6 +98,19 @@ var HttpServer = /** @class */ (function () {
         return this;
     };
     /**
+     * set static file handler
+     *
+     * @param {string} pathToStatic - path to your static files
+     * @param {string} route - path to use as route - ex. app.use(path,()=>void)
+     */
+    HttpServer.prototype.setStatic = function (pathToStatic, route) {
+        var cb = function (app) { return route
+            ? app.use(route, express.static(pathToStatic))
+            : app.use(express.static(pathToStatic)); };
+        this.viewMiddleware.splice(0, 0, cb);
+        return this;
+    };
+    /**
      * set all the functions which should be used as error handlers for each request
      *
      * @param {IExpressCallback} handlers
@@ -124,6 +139,7 @@ var HttpServer = /** @class */ (function () {
         var httpInstance = this.serverInstance
             .setConfig(function (app) {
             that.middlewares.forEach(function (middleware) { return middleware(app); });
+            that.viewMiddleware.forEach(function (middleware) { return middleware(app); });
         })
             .setErrorConfig(function (app) {
             that.handlers.forEach(function (middleware) { return middleware(app); });
@@ -149,7 +165,6 @@ var HttpServer = /** @class */ (function () {
         return server.listen(port, null, function (err) {
             if (!err) {
                 console.log(icons_1.SUGOI_ICON);
-                console.log(icons_1.SUGOI_LOGO);
             }
             callback(err);
         });

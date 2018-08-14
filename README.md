@@ -1,6 +1,6 @@
 # @Sugoi/server
 
-![Sugoi logo](../assets/logo_inverse.png)
+![Sugoi logo](https://sugoijs.com/assets/logo_inverse.png)
 
 
 ## Introduction
@@ -66,14 +66,23 @@ For bootstrapping we will use the init method
     const server:HttpServer = HttpServer.init(ServerModule,"/api");
 
 ### Setting middlewares and Error handlers
+For setting static file serving use
+
+>   setStatic(pathToStatic:string,route?:string)
+
 For setting middlewares  we will use
+
 >   setMiddlewares(...(app)=>void)
 
 For setting error handlers we will use
+
 >   setErrorHandlers((app) => void)
 
 
-    (<HttpServer>server).setMiddlewares((app) => {
+    (<HttpServer>server)
+        .setStatic("assets/admin","/admin")
+        .setStatic("assets/main")
+        .setMiddlewares((app) => {
             app.use(bodyParser.json());
             app.use(compression());
             if (DEVELOPMENT) {

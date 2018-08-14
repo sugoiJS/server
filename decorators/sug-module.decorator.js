@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var meta_key_1 = require("../constants/meta-key");
 /**
  * Decorator @SugModule, register controllers, services and modules which

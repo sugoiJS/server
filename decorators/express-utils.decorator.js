@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var expressUtils = require("inversify-express-utils");
 exports.expressUtils = expressUtils;
 var inversify_express_utils_1 = require("inversify-express-utils");
@@ -21,3 +21,7 @@ exports.requestHeaders = inversify_express_utils_1.requestHeaders;
 exports.cookies = inversify_express_utils_1.cookies;
 exports.next = inversify_express_utils_1.next;
 exports.injectHttpContext = inversify_express_utils_1.injectHttpContext;
+exports.getRouteInfo = inversify_express_utils_1.getRouteInfo;
+exports.BaseMiddleware = inversify_express_utils_1.BaseMiddleware;
+exports.BaseHttpController = inversify_express_utils_1.BaseHttpController;
+exports.TYPE = inversify_express_utils_1.TYPE;
