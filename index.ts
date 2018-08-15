@@ -1,10 +1,3 @@
-
-export {UsePolicy} from "./decorators/guard.decorator";
-
-export {Policy} from "./decorators/guard.decorator";
-
-export {TPolicy} from "./classes/guard.class";
-
 export {ResponseMessage} from "./classes/response-message";
 
 export {SugModule} from "./decorators/sug-module.decorator";
