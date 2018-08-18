@@ -10,10 +10,10 @@ import {ModuleMetaKey} from "../constants/meta-key";
  * @returns {(item: any) => any}
  * @constructor
  */
-const SugModule = function(metadata: IModuleMetadata,metaKey:string = ModuleMetaKey) {
+const ServerModule = function(metadata: IModuleMetadata,metaKey:string = ModuleMetaKey) {
     return function (item:any) {
         Reflect.defineMetadata(metaKey, metadata, item);
     }
 };
-export {SugModule};
+export {ServerModule};
 

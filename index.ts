@@ -1,6 +1,8 @@
+export {RequestSchemaPolicy} from "./decorators/request-schema-policy.decorator";
+
 export {ResponseMessage} from "./classes/response-message";
 
-export {SugModule} from "./decorators/sug-module.decorator";
+export {ServerModule} from "./decorators/server-module.decorator";
 
 export {ModuleMetaKey} from "./constants/meta-key";
 
@@ -13,4 +15,5 @@ export {HttpServer} from "./classes/http-server.class";
 export {ModuleItem} from "./interfaces/module-item.interface";
 
 export * from "./decorators/express-utils.decorator"
+
 

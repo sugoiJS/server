@@ -1,32 +1,33 @@
-# @Sugoi/server
+# @Sugoi/Server
 
 ![Sugoi logo](https://sugoijs.com/assets/logo_inverse.png)
 
 
 ## Introduction
-Sugoi server module is part of the modular Sugoi framework.
+SugoiJS™ is a minimal modular framework.
 
-The server module can be use as stand alone library.
+SugoiJS™ gives you the ability to use only what you need and do it fast.
 
-This module provide singleton services and decorators.
+this is a standalone module that can be functional on its own (as all of the SugoiJS™ modules).
 
-Sugoi server use [inversify](https://www.npmjs.com/package/inversify) and [inversify-express-utils](https://www.npmjs.com/package/inversify-express-utils) and re-export those modules
+This module provides singleton services, request handling decorators and request policies decorators.
+
+SugoiJS server use [inversify](https://www.npmjs.com/package/inversify), [inversify-express-utils](https://www.npmjs.com/package/inversify-express-utils) and re-export those modules
 
 ## Installation
 
- For installing the Sugoi/server module run:
-> npm install --save @sugoi/server @sugoi/core
+> npm install --save @sugoi/server
 
 
 ### Set controller
 
-    import {controller,response,httpGet,requestParam} from "@sugoi/server";
+    import {Controller,Response,HttpGet,RequestParam} from "@sugoi/server";
 
-    @controller('/dashboard')
+    @Controller('/dashboard')
     export class CoreController{
         constructor(){}
 
-        @httpGet("/:role")
+        @HttpGet("/:role")
         test(@response() response,@requestParam('role') role){
             if(role === "user" )
                 return "authorized";
@@ -37,14 +38,14 @@ Sugoi server use [inversify](https://www.npmjs.com/package/inversify) and [inver
     }
 
 ### Set service
- Service can be any class you want with no special deorators.
+ Any class can be used as a service without special decorators.
 
 ### Set module
-  for setting module you should use the @SugModule annotation
+  for setting module you should use the @ServerModule decorator
 
-    import {SugModule} from "@sugoi/server"
+    import {ServerModule} from "@sugoi/server"
 
-    @SugModule({
+    @ServerModule({
         controllers:[CoreController],
         services: [CoreService],
         modules:[LoginModule,DashboardModule]
@@ -54,10 +55,11 @@ Sugoi server use [inversify](https://www.npmjs.com/package/inversify) and [inver
     }
 
 ### Bootstrapping
-For bootstrapping we will use the init method
-> init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider, container?: inversify.Container)
+For bootstrapping use the 'init' method:
 
-> boostrapModule - Entry point module
+    init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider, container?: inversify.Container)
+
+when boostrapModule is the entry point module
 
 > rootPath - Server uri prefix
 
@@ -66,18 +68,19 @@ For bootstrapping we will use the init method
     const server:HttpServer = HttpServer.init(ServerModule,"/api");
 
 ### Setting middlewares and Error handlers
-For setting static file serving use
+For setting static file serving use:
 
->   setStatic(pathToStatic:string,route?:string)
+    setStatic(pathToStatic:string,route?:string)
 
-For setting middlewares  we will use
+For setting middlewares use:
 
->   setMiddlewares(...(app)=>void)
+    setMiddlewares(...(app)=>void)
 
-For setting error handlers we will use
+For setting error handlers use:
 
->   setErrorHandlers((app) => void)
+    setErrorHandlers((app) => void)
 
+Full example:
 
     (<HttpServer>server)
         .setStatic("assets/admin","/admin")
@@ -87,12 +90,10 @@ For setting error handlers we will use
             app.use(compression());
             if (DEVELOPMENT) {
                 app.set('json spaces', 2);
-
                 app.use(cors());
                 app.use(require('morgan')('dev'));
             }
             app.use(express.static(paths.static));
-
         })
         .setErrorHandlers((app) => {
             app.use(function (req, res, next) {
@@ -109,8 +110,8 @@ For setting error handlers we will use
             });
         });
 
-### Build & listening
-After setting the middlewares and error handlers we can build and listen to request by:
+### Build & listen
+After setting the middlewares and error handlers, build and listen to requests by:
 
     (<HttpServer>server).build(PORT)
         .listen(PORT, (error: Error) => {
