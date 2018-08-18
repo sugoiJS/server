@@ -1,4 +1,4 @@
-export {RequestSchemaPolicy} from "./decorators/request-schema-policy.decorator";
+// export {RequestSchemaPolicy} from "./decorators/request-schema-policy.decorator";
 
 export {ResponseMessage} from "./classes/response-message";
 

@@ -12,12 +12,11 @@ this is a standalone module that can be functional on its own (as all of the Sug
 
 This module provides singleton services, request handling decorators and request policies decorators.
 
-SugoiJS server use [inversify](https://www.npmjs.com/package/inversify), [inversify-express-utils](https://www.npmjs.com/package/inversify-express-utils) and re-export those modules
+SugoiJS™ server use [inversify](https://www.npmjs.com/package/inversify), [inversify-express-utils](https://www.npmjs.com/package/inversify-express-utils) and re-export those modules
 
 ## Installation
 
 > npm install --save @sugoi/server
-
 
 ### Set controller
 
