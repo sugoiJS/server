@@ -4,21 +4,23 @@
 
 
 ## Introduction
-SugoiJS™ is a minimal modular framework.
+SugoiJS is a minimal modular framework.
 
-SugoiJS™ gives you the ability to use only what you need and do it fast.
+SugoiJS gives you the ability to use only what you need and do it fast.
 
-this is a standalone module that can be functional on its own (as all of the SugoiJS™ modules).
+this is a standalone module that can be functional on its own (as all of the SugoiJS modules).
 
 This module provides singleton services, request handling decorators and request policies decorators.
 
-SugoiJS™ server use [inversify](https://www.npmjs.com/package/inversify), [inversify-express-utils](https://www.npmjs.com/package/inversify-express-utils) and re-export those modules
+SugoiJS server use [inversify](https://www.npmjs.com/package/inversify), [inversify-express-utils](https://www.npmjs.com/package/inversify-express-utils) and re-export those modules
 
 ## Installation
 
 > npm install --save @sugoi/server
 
 ### Set controller
+
+SugoiJS use inversify-express-utils decorators and re-export them (also with alias to capitalize camel-case decorator names)
 
     import {Controller,Response,HttpGet,RequestParam} from "@sugoi/server";
 
@@ -35,6 +37,8 @@ SugoiJS™ server use [inversify](https://www.npmjs.com/package/inversify), [inv
             }
         }
     }
+
+Further information can be found on [Inversify-express-utils documentation](https://github.com/inversify/inversify-express-utils)
 
 ### Set service
  Any class can be used as a service without special decorators.
@@ -122,6 +126,26 @@ After setting the middlewares and error handlers, build and listen to requests b
         });
 
 This call will return http.Server instance which can be use for setting app variables, socket server and more.
+
+## Policies
+
+@sugoi/server use @sugoi/core policies and supply predefined policies.
+
+Further information on the [@sugoi/core package documentation](https://sugoijs.com/#/documentation/core/index)
+
+### RequestSchemaPolicy
+
+    /**
+     *  paramSchema         - req.params
+     *  queryParamSchema    - req.query
+     *  bodySchema          - req.body
+     *  headersSchema       - req.headers
+     **/
+    RequestSchemaPolicy(paramSchema?: TComparableSchema,queryParamSchema?: TComparableSchema,bodySchema?: TComparableSchema,headersSchema?: TComparableSchema)
+
+The `RequestSchemaPolicy` decorator use for validate the request is using a valid schema for params\queryParams\body\headers.
+
+In case null will pass the value won't be checked.
 
 ## Documentation
 
