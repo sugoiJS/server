@@ -1,25 +1,24 @@
 import {interfaces} from "inversify-express-utils";
-import {Request,Response,NextFunction} from "express";
+import * as e from "express";
 
-export class AuthProvider implements interfaces.AuthProvider, interfaces.Principal{
+export abstract class AuthProvider<T=any> implements interfaces.AuthProvider, interfaces.Principal {
     details: any;
 
-    constructor(){
+    constructor() {
         return this;
     }
 
-    isAuthenticated(): Promise<boolean> {
-        return Promise.resolve(true);
+
+    abstract isAuthenticated(req?:e.Request): Promise<boolean>;
+
+    abstract isResourceOwner(resourceId: any): Promise<boolean>;
+
+    abstract getUser(req: e.Request, res: e.Response, next: e.NextFunction): Promise<interfaces.Principal>;
+
+    abstract isInRole(role: string): Promise<boolean>;
+
+    getUserData(): Promise<T> {
+        return Promise.resolve(this.details);
     }
 
-    isResourceOwner(resourceId: any): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-
-    isInRole(role: string): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-    getUser(req: Request, res: Response, next: NextFunction): Promise<interfaces.Principal> {
-        return Promise.resolve(new AuthProvider());
-    }
 }

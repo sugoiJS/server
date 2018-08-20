@@ -10,6 +10,7 @@ import {AuthProvider} from "./auth-provider.class";
 import {Server} from "http";
 import {SUGOI_ICON} from "../constants/icons";
 import {Container} from '@sugoi/core';
+import {TNewable} from "../interfaces/newable.type";
 
 export class HttpServer {
     private static serverInstances: Map<string, HttpServer> = new Map();
@@ -45,31 +46,32 @@ export class HttpServer {
                           container: Container,
                           moduleMetaKey: string,
                           module: IModuleMetadata,
-                          authProvider: AuthProvider) {
+                          authProvider: TNewable<AuthProvider>) {
         this._rootPath = rootPath;
         this.moduleMetaKey = moduleMetaKey;
         this.loadModules(module, container);
-        this.serverInstance = new InversifyExpressServer(container, null, {rootPath}, null);
+        this.serverInstance = new InversifyExpressServer(container, null, {rootPath}, null, authProvider);
+
     }
 
     /**
      * Initialize the application by creating new httpServer.
      *
-     * A bootstrap module (boostrapModule) should be decorated with SugModule and 'modules' property
+     * A bootstrap module (bootstrapModule) should be decorated with SugModule and 'modules' property
      * which contains all of the related modules.
      * Depended on moduleMetaKey for separate applications.
      *
      * @param bootstrapModule - the root module which use as entry point
      * @param {string} rootPath - the prefix for all of the routes
      * @param {string} moduleMetaKey - related to SugModule metaKey
-     * @param {AuthProvider} authProvider -
+     * @param {AuthProvider} authProvider - Authentication & authorization service which will use for @AuthPolicy and the Inversify express `this.httpContext` & @Principal
      * @param {Container} container - the inversify Container which will be use to for binding the services
      * @returns {HttpServer}
      */
     public static init(bootstrapModule: any,
                        rootPath: string = "/",
                        moduleMetaKey: string = ModuleMetaKey,
-                       authProvider: AuthProvider = null,
+                       authProvider: TNewable<AuthProvider> = null,
                        container: Container = new Container()): HttpServer {
         if (HttpServer.serverInstances.has(moduleMetaKey)) {
             return HttpServer.serverInstances.get(moduleMetaKey)
@@ -113,11 +115,11 @@ export class HttpServer {
      * @param {string} pathToStatic - path to your static files
      * @param {string} route - path to use as route - ex. app.use(path,()=>void)
      */
-    public setStatic(pathToStatic: string,route?:string) {
+    public setStatic(pathToStatic: string, route?: string) {
         const cb = (app) => route
             ? app.use(route, express.static(pathToStatic))
             : app.use(express.static(pathToStatic));
-        this.viewMiddleware.splice(0,0,cb);
+        this.viewMiddleware.splice(0, 0, cb);
         return this
     }
 
@@ -172,7 +174,7 @@ export class HttpServer {
         const server = this.httpListeners.has(port)
             ? this.httpListeners.get(port)
             : null;
-        if(!server) {
+        if (!server) {
             return callback(`No server instance found for port ${port}`);
         }
 
@@ -205,6 +207,10 @@ export class HttpServer {
 
     protected setNamespace(moduleMetaKey: string) {
         this.moduleMetaKey = moduleMetaKey;
+    }
+
+    public getNamespace() {
+        return this.moduleMetaKey
     }
 }
 

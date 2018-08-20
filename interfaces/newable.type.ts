@@ -1,0 +1,1 @@
+export type TNewable<T> = new ()=>T;
