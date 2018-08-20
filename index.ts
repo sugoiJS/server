@@ -1,5 +1,6 @@
-
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
+
+export {SchemaTypes, TPolicy, TComparableSchema, Policy, UsePolicy, ComparableSchema} from "@sugoi/core";
 
 export {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 
@@ -20,5 +21,7 @@ export {HttpServer} from "./classes/http-server.class";
 export {ModuleItem} from "./interfaces/module-item.interface";
 
 export * from "./decorators/express-utils.decorator"
+
+
 
 

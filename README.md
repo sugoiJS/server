@@ -131,6 +131,8 @@ This call will return http.Server instance which can be use for setting app vari
 
 @sugoi/server use @sugoi/core policies and supply predefined policies.
 
+And re-export SchemaTypes, TPolicy, TComparableSchema, Policy, UsePolicy, ComparableSchema from "@sugoi/core";
+
 Further information on the [@sugoi/core package documentation](https://sugoijs.com/#/documentation/core/index)
 
 ### RequestSchemaPolicy
@@ -146,6 +148,24 @@ Further information on the [@sugoi/core package documentation](https://sugoijs.c
 The `RequestSchemaPolicy` decorator use for validate the request is using a valid schema for params\queryParams\body\headers.
 
 In case null will pass the value won't be checked.
+
+Example:
+
+    @Controller('/dashboard')
+    export class DashboardController {
+        constructor() {
+        }
+
+        @HttpPost("/:id")
+        @RequestSchemaPolicy({"id": ComparableSchema.ofType(SchemaTypes.NUMBER)},
+                              null,
+                              {"role": ComparableSchema.ofType({text: ComparableSchema.ofType(SchemaTypes.STRING).setRegex("([A-Z])+","i")})})
+                              //body schema is {role:{text:string//with regex /([A-Z])+/i}}
+        getUser(@RequestParam("id") id:number, @RequestBody("role") role:{text:string}) {
+            return User.findOne({id,role.text})
+        }
+
+    }
 
 ## Documentation
 
