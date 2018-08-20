@@ -32,7 +32,7 @@
   "author": "Orel Balilti",
   "license": "MIT",
   "dependencies": {
-    "@sugoi/core": "^2.0.2",
+    "@sugoi/core": "^2.1.0",
     "express": "^4.16.3",
     "inversify-express-utils": "^6.0.0"
   },

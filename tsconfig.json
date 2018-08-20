@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-//    "inlineSourceMap": true,
+    "inlineSourceMap": true,
     "outDir": "./dist"                        /* Redirect output structure to the directory. */
   },
   "typeRoots": [

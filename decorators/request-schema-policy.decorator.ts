@@ -4,7 +4,7 @@ import {ParametersValidatorUtil} from "../utils/parameters-validator.util";
 export const RequestSchemaPolicy = function (paramSchema: TComparableSchema = null,
                                              queryParamSchema: TComparableSchema = null,
                                              bodySchema: TComparableSchema = null,
-                                             headerSchema: TComparableSchema = null) {
-    return UsePolicy('ParametersValidatorUtil.validateRequest', 400, paramSchema, queryParamSchema, bodySchema, headerSchema);
+                                             headersSchema: TComparableSchema = null) {
+    return UsePolicy('ParametersValidatorUtil.validateRequest', 400, {params:paramSchema, query:queryParamSchema, body:bodySchema, headers:headersSchema});
 
 }

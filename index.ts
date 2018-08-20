@@ -1,4 +1,9 @@
-// export {RequestSchemaPolicy} from "./decorators/request-schema-policy.decorator";
+
+import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
+
+export {ParametersValidatorUtil} from "./utils/parameters-validator.util";
+
+export {RequestSchemaPolicy} from "./decorators/request-schema-policy.decorator";
 
 export {ResponseMessage} from "./classes/response-message";
 
