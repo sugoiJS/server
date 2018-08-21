@@ -2,7 +2,7 @@ import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 
 export {SchemaTypes, TPolicy, TComparableSchema, Policy, UsePolicy, ComparableSchema} from "@sugoi/core";
 
-export {ParametersValidatorUtil} from "./utils/parameters-validator.util";
+export {ParametersValidatorUtil}
 
 export {RequestSchemaPolicy} from "./decorators/request-schema-policy.decorator";
 

@@ -147,7 +147,7 @@ Further information on the [@sugoi/core package documentation](https://sugoijs.c
 
 The `RequestSchemaPolicy` decorator use for validate the request is using a valid schema for params\queryParams\body\headers.
 
-In case null will pass the value won't be checked.
+In case null will pass the value won't check.
 
 Example:
 
