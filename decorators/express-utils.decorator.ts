@@ -1,5 +1,6 @@
 import * as expressUtils from "inversify-express-utils";
-import { controller,
+import {
+    controller,
     httpMethod,
     httpGet,
     httpPut,
@@ -22,8 +23,10 @@ import { controller,
     BaseHttpController,
     TYPE
 } from "inversify-express-utils";
+
 const Controller = controller,
     HttpPost = httpPost,
+    HttpPut = httpPut,
     HttpGet = httpGet,
     HttpDelete = httpDelete,
     HttpHead = httpHead,
@@ -39,7 +42,8 @@ const Controller = controller,
     Cookies = cookies,
     Next = next;
 
-export { expressUtils,
+export {
+    expressUtils,
     controller,
     httpMethod,
     httpGet,
@@ -57,13 +61,9 @@ export { expressUtils,
     requestHeaders,
     cookies,
     next,
-    injectHttpContext,
-    getRouteInfo,
-    BaseMiddleware,
-    BaseHttpController,
-    TYPE,
     Controller,
     HttpPost,
+    HttpPut,
     HttpGet,
     HttpDelete,
     HttpHead,
@@ -77,5 +77,10 @@ export { expressUtils,
     RequestBody,
     RequestHeaders,
     Cookies,
-    Next
+    Next,
+    injectHttpContext,
+    getRouteInfo,
+    BaseMiddleware,
+    BaseHttpController,
+    TYPE
 };
