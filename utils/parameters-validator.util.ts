@@ -24,6 +24,6 @@ export class ParametersValidatorUtil {
     }
 
     static getRequestFromArgs(args){
-        return args.functionArgs.find(arg => arg.constructor.name === 'IncomingMessage')
+        return args.functionArgs.find(arg => arg && arg.constructor && arg.constructor.name === 'IncomingMessage')
     }
 }
