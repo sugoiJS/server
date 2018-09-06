@@ -12,11 +12,53 @@ this is a standalone module that can be functional on its own (as all of the Sug
 
 This module provides singleton services, request handling decorators and request policies decorators.
 
-SugoiJS server use [inversify](https://www.npmjs.com/package/inversify), [inversify-express-utils](https://www.npmjs.com/package/inversify-express-utils) and re-export those modules
+SugoiJS server uses [inversify](https://www.npmjs.com/package/inversify), [inversify-express-utils](https://www.npmjs.com/package/inversify-express-utils) and re-export those modules
 
 ## Installation
 
 > npm install --save @sugoi/server
+
+### Bootstrapping
+
+To boostrap you server use the 'init' method:
+
+    init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider, container?: inversify.Container)
+
+when boostrapModule is the entry point module
+
+> rootPath - Server uri prefix
+
+    import {HttpServer} from "@sugoi/server";
+
+    const server:HttpServer = HttpServer.init(ServerModule,"/api");
+
+### Build & listen
+After setting the middlewares and error handlers, build and listen to requests by:
+
+    (<HttpServer>server).build(PORT)
+        .listen(PORT, (error: Error) => {
+            if (error) {
+                logger.error(error.message);
+                throw error;
+            }
+            logger.debug(`Server running @ ${HOST}:${PORT}`);
+        });
+
+This call will return http.Server instance which can be use for setting app variables, socket server and more.
+
+### Set module
+Creating a module requires you to should use the @ServerModule decorator
+
+    import {ServerModule} from "@sugoi/server"
+
+    @ServerModule({
+        controllers:[CoreController],
+        services: [CoreService],
+        modules:[LoginModule,DashboardModule]
+    })
+    export class ServerModule{
+        constructor(){}
+    }
 
 ### Set controller
 
@@ -41,34 +83,8 @@ SugoiJS use inversify-express-utils decorators and re-export them (also with ali
 Further information can be found on [Inversify-express-utils documentation](https://github.com/inversify/inversify-express-utils)
 
 ### Set service
- Any class can be used as a service without special decorators.
+Any class can be used as a service without special decorators.
 
-### Set module
-  for setting module you should use the @ServerModule decorator
-
-    import {ServerModule} from "@sugoi/server"
-
-    @ServerModule({
-        controllers:[CoreController],
-        services: [CoreService],
-        modules:[LoginModule,DashboardModule]
-    })
-    export class ServerModule{
-        constructor(){}
-    }
-
-### Bootstrapping
-For bootstrapping use the 'init' method:
-
-    init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider, container?: inversify.Container)
-
-when boostrapModule is the entry point module
-
-> rootPath - Server uri prefix
-
-    import {HttpServer} from "@sugoi/server";
-
-    const server:HttpServer = HttpServer.init(ServerModule,"/api");
 
 ### Setting middlewares and Error handlers
 For setting static file serving use:
@@ -113,23 +129,11 @@ Full example:
             });
         });
 
-### Build & listen
-After setting the middlewares and error handlers, build and listen to requests by:
 
-    (<HttpServer>server).build(PORT)
-        .listen(PORT, (error: Error) => {
-            if (error) {
-                logger.error(error.message);
-                throw error;
-            }
-            logger.debug(`Server running @ ${HOST}:${PORT}`);
-        });
-
-This call will return http.Server instance which can be use for setting app variables, socket server and more.
 
 ## Policies
 
-@sugoi/server use @sugoi/core policies and supply predefined policies.
+@sugoi/server uses @sugoi/core policies and supply predefined policies.
 
 And re-export SchemaTypes, TPolicy, TComparableSchema, Policy, UsePolicy, ComparableSchema from "@sugoi/core";
 
