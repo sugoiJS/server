@@ -139,16 +139,13 @@ export class HttpServer {
 
     /**
      * storing a new http server instance with declared middlewares and fallback
-     * based on port.
+     * based on instanceID.
      *
-     * @param {number|string} instanceId
+     * @param {number|string} instanceId - the key used to store http server instance for later usage
      * @returns {any}
      */
     public build(instanceId:string|number = this.instanceId) {
         this.setInstanceId(instanceId);
-        if (this.httpListeners.has(this.instanceId)) {
-            return this.httpListeners.get(this.instanceId);
-        }
         const that = this;
         const httpInstance = this.serverInstance
             .setConfig(app => {
