@@ -11,6 +11,7 @@ import {Server} from "http";
 import {SUGOI_ICON} from "../constants/icons";
 import {Container} from '@sugoi/core';
 import {TNewable} from "../interfaces/newable.type";
+import {StringUtils} from "@sugoi/core/dist/policies/utils/string.util";
 
 export class HttpServer {
     private static serverInstances: Map<string, HttpServer> = new Map();
@@ -20,8 +21,9 @@ export class HttpServer {
         throw new SugoiServerError(EXCEPTIONS.GENERAL_SERVER_ERROR.message, EXCEPTIONS.GENERAL_SERVER_ERROR.code, err)
     })];
     private moduleMetaKey: string;
+    private instanceId:string|number;
     private serverInstance: InversifyExpressServer;
-    private httpListeners: Map<number, Application> = new Map();
+    private httpListeners: Map<string|number, Application> = new Map();
     private _rootPath: string;
     /**
      * rootPath stands for the server uri prefix
@@ -51,6 +53,7 @@ export class HttpServer {
         this.moduleMetaKey = moduleMetaKey;
         this.loadModules(module, container);
         this.serverInstance = new InversifyExpressServer(container, null, {rootPath}, null, authProvider);
+        this.instanceId = StringUtils.generateGuid();
 
     }
 
@@ -138,13 +141,13 @@ export class HttpServer {
      * storing a new http server instance with declared middlewares and fallback
      * based on port.
      *
-     * @param {number} port
+     * @param {number|string} instanceId
      * @returns {any}
      */
-    public build(port: number) {
-
-        if (this.httpListeners.has(port)) {
-            return this.httpListeners.get(port);
+    public build(instanceId:string|number = this.instanceId) {
+        this.setInstanceId(instanceId);
+        if (this.httpListeners.has(this.instanceId)) {
+            return this.httpListeners.get(this.instanceId);
         }
         const that = this;
         const httpInstance = this.serverInstance
@@ -156,7 +159,7 @@ export class HttpServer {
                 that.handlers.forEach(middleware => middleware(app));
             })
             .build();
-        this.httpListeners.set(port, httpInstance);
+        this.httpListeners.set(this.instanceId, httpInstance);
         return this;
     }
 
@@ -168,11 +171,9 @@ export class HttpServer {
      * @param {Function} callback
      * @returns {"http".Server}
      */
-    public listen(port: number, callback: Function = (err?) => {
-    }): Server {
-
-        const server = this.httpListeners.has(port)
-            ? this.httpListeners.get(port)
+    public listen(port: number, callback: Function = (err?) => {}): Server {
+        const server = this.httpListeners.has(this.instanceId)
+            ? this.httpListeners.get(this.instanceId)
             : null;
         if (!server) {
             return callback(`No server instance found for port ${port}`);
@@ -211,6 +212,14 @@ export class HttpServer {
 
     public getNamespace() {
         return this.moduleMetaKey
+    }
+
+    public setInstanceId(instanceId:string|number){
+        this.instanceId = instanceId;
+    }
+
+    public getInstanceId(){
+        return this.instanceId;
     }
 }
 
