@@ -35,7 +35,7 @@ when boostrapModule is the entry point module
 ### Build & listen
 After setting the middlewares and error handlers, build and listen to requests by:
 
-    (<HttpServer>server).build(PORT)
+    (<HttpServer>server).build()
         .listen(PORT, (error: Error) => {
             if (error) {
                 logger.error(error.message);
