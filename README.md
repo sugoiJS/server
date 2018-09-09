@@ -85,11 +85,26 @@ Further information can be found on [Inversify-express-utils documentation](http
 ### Set service
 For setting class as service the class must be decorated with `@Injectable` decorator, this will set the class as singleton.
 
+    @Injectable()
+    class MyService{
+        public listeners:number = 0;
+
+        public incListeners(){
+            this.listeners++;
+        }
+
+        public decListeners(){
+            this.listeners--;
+        }
+    }
+
 later we will be able to inject the service instance:
 
- - `@Inject(class name\class reference)`
+ - `@Inject(MyService)`
 
- - `constructor(myService:MyServiceReference)`
+ - `@Inject("MyService")`
+
+ - `constructor(myService:MyService)`
 
 
 ### Setting middlewares and Error handlers
