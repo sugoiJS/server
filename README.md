@@ -83,7 +83,13 @@ SugoiJS use inversify-express-utils decorators and re-export them (also with ali
 Further information can be found on [Inversify-express-utils documentation](https://github.com/inversify/inversify-express-utils)
 
 ### Set service
-Any class can be used as a service without special decorators.
+For setting class as service the class must be decorated with @Injectable decorator, this will set the class as singleton.
+
+later we will be able to inject the service instance:
+
+ - `@Inject(class name\class reference)`
+
+ - `constructor(myService:MyServiceReference)`
 
 
 ### Setting middlewares and Error handlers
