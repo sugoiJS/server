@@ -11,7 +11,7 @@ export class ParametersValidatorUtil {
         }]
     }): true | any {
         const schemaMap = args.policyMeta[0];
-        const request = ParametersValidatorUtil.getRequestFromArgs(args);
+        const request = ParametersValidatorUtil.getRequestFromArgs(args.functionArgs);
         let validationValue = null;
         const valid = Object.keys(schemaMap).every(key => {
             if (!schemaMap[key]) return true;
@@ -24,6 +24,6 @@ export class ParametersValidatorUtil {
     }
 
     static getRequestFromArgs(args){
-        return args.functionArgs.find(arg => arg && arg.constructor && arg.constructor.name === 'IncomingMessage')
+        return args.find(arg => arg && arg.constructor && arg.constructor.name === 'IncomingMessage')
     }
 }

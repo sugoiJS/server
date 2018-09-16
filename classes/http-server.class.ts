@@ -9,21 +9,39 @@ import {Application} from "express";
 import {AuthProvider} from "./auth-provider.class";
 import {Server} from "http";
 import {SUGOI_ICON} from "../constants/icons";
-import {Container} from '@sugoi/core';
+import {Container, Injectable} from '@sugoi/core';
 import {TNewable} from "../interfaces/newable.type";
 import {StringUtils} from "@sugoi/core/dist/policies/utils/string.util";
+import {ServerContainerService} from "../services/server-container.service";
 
 export class HttpServer {
+    protected _container: Container;
+    public get container() {
+        return this._container;
+    }
+
     private static serverInstances: Map<string, HttpServer> = new Map();
+    private metaMiddlewares: Array<IExpressCallback> = [
+        (function (app) {
+            app.use((function (req, res, next) {
+                req['container'] = this.container;
+                next();
+            }).bind(this))
+        }).bind(this)
+    ];
     private middlewares: Array<IExpressCallback> = [];
     private viewMiddleware: Array<IExpressCallback> = [];
     private handlers: Array<IExpressCallback> = [(app) => app.use(function (err) {
         throw new SugoiServerError(EXCEPTIONS.GENERAL_SERVER_ERROR.message, EXCEPTIONS.GENERAL_SERVER_ERROR.code, err)
     })];
     private moduleMetaKey: string;
-    private instanceId:string|number;
-    private serverInstance: InversifyExpressServer;
-    private httpListeners: Map<string|number, Application> = new Map();
+    private instanceId: string | number;
+    private _serverInstance: InversifyExpressServer;
+    public get serverInstance(): InversifyExpressServer {
+        return this._serverInstance
+    };
+
+    private httpListeners: Map<string | number, Application> = new Map();
     private _rootPath: string;
     /**
      * rootPath stands for the server uri prefix
@@ -45,17 +63,24 @@ export class HttpServer {
      * @constructor
      */
     protected constructor(rootPath: string,
-                          container: Container,
                           moduleMetaKey: string,
                           module: IModuleMetadata,
                           authProvider: TNewable<AuthProvider>) {
+        this.instanceId = StringUtils.generateGuid();
+        ServerContainerService.setContainerForId(this.instanceId);
+        this._container = ServerContainerService.getContainerById(this.instanceId);
         this._rootPath = rootPath;
         this.moduleMetaKey = moduleMetaKey;
-        this.loadModules(module, container);
-        this.serverInstance = new InversifyExpressServer(container, null, {rootPath}, null, authProvider);
-        this.instanceId = StringUtils.generateGuid();
+        this.loadModules(module, this._container);
+        this._serverInstance = new InversifyExpressServer(this._container, null, {rootPath}, null, authProvider);
 
     }
+
+
+    public static init(bootstrapModule: any): HttpServer;
+    public static init(bootstrapModule: any, rootPath: string): HttpServer;
+    public static init(bootstrapModule: any, rootPath: string, moduleMetaKey?: string): HttpServer;
+    public static init(bootstrapModule: any, rootPath: string, moduleMetaKey?: string, authProvider?: TNewable<AuthProvider>): HttpServer;
 
     /**
      * Initialize the application by creating new httpServer.
@@ -66,20 +91,20 @@ export class HttpServer {
      *
      * @param bootstrapModule - the root module which use as entry point
      * @param {string} rootPath - the prefix for all of the routes
-     * @param {string} moduleMetaKey - related to SugModule metaKey
-     * @param {AuthProvider} authProvider - Authentication & authorization service which will use for @AuthPolicy and the Inversify express `this.httpContext` & @Principal
-     * @param {Container} container - the inversify Container which will be use to for binding the services
+     * @param {string} moduleMetaKey - related to ServerModule metaKey - Allow to use the right configuration decorator
+     * @param {TNewable<AuthProvider>} authProvider - Authentication & authorization service which will use for @Authorization and the Inversify express `this.httpContext` & @Principal
+     *
      * @returns {HttpServer}
      */
     public static init(bootstrapModule: any,
                        rootPath: string = "/",
                        moduleMetaKey: string = ModuleMetaKey,
-                       authProvider: TNewable<AuthProvider> = null,
-                       container: Container = new Container()): HttpServer {
+                       authProvider: TNewable<AuthProvider> = null): HttpServer {
+        moduleMetaKey = moduleMetaKey || ModuleMetaKey;
         if (HttpServer.serverInstances.has(moduleMetaKey)) {
             return HttpServer.serverInstances.get(moduleMetaKey)
         } else {
-            const server = new HttpServer(rootPath, container, moduleMetaKey, bootstrapModule, authProvider);
+            const server = new HttpServer(rootPath, moduleMetaKey, bootstrapModule, authProvider);
             HttpServer.serverInstances.set(moduleMetaKey, server);
             return server;
         }
@@ -87,17 +112,17 @@ export class HttpServer {
     }
 
     /**
-     * Get the application instance based on moduleMetaKay and port
+     * Get the application instance based on moduleMetaKay and instanceId
      *
+     * @param {number} instanceId
      * @param {string} moduleMetaKey
-     * @param {number} port
      * @returns {e.Application}
      */
-    public static getInstance(moduleMetaKey: string, port: number) {
+    public static getInstance(instanceId: number, moduleMetaKey: string = ModuleMetaKey) {
         const instance = HttpServer.serverInstances.get(moduleMetaKey);
 
-        return instance && instance.httpListeners.has(port)
-            ? instance.httpListeners.get(port)
+        return instance && instance.httpListeners.has(instanceId)
+            ? instance.httpListeners.get(instanceId)
             : null;
     }
 
@@ -144,11 +169,12 @@ export class HttpServer {
      * @param {number|string} instanceId - the key used to store http server instance for later usage
      * @returns {any}
      */
-    public build(instanceId:string|number = this.instanceId) {
+    public build(instanceId: string | number = this.instanceId) {
         this.setInstanceId(instanceId);
         const that = this;
         const httpInstance = this.serverInstance
             .setConfig(app => {
+                that.metaMiddlewares.forEach(middleware => middleware(app));
                 that.middlewares.forEach(middleware => middleware(app));
                 that.viewMiddleware.forEach(middleware => middleware(app));
             })
@@ -168,7 +194,8 @@ export class HttpServer {
      * @param {Function} callback
      * @returns {"http".Server}
      */
-    public listen(port: number, callback: Function = (err?) => {}): Server {
+    public listen(port: number, callback: Function = (err?) => {
+    }): Server {
         const server = this.httpListeners.has(this.instanceId)
             ? this.httpListeners.get(this.instanceId)
             : null;
@@ -215,11 +242,11 @@ export class HttpServer {
         return this.moduleMetaKey
     }
 
-    public setInstanceId(instanceId:string|number){
+    public setInstanceId(instanceId: string | number) {
         this.instanceId = instanceId;
     }
 
-    public getInstanceId(){
+    public getInstanceId() {
         return this.instanceId;
     }
 }

@@ -1,8 +1,15 @@
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
+import {AuthorizationUtils} from "./utils/authorization.utils";
+
+export {AuthProvider} from "./classes/auth-provider.class";
+
+export {ParametersValidatorUtil};
+
+export {AuthorizationUtils};
+
+export {Authorized} from "./decorators/authorization-policy.decorator";
 
 export {SchemaTypes, TPolicy, TComparableSchema, Policy, UsePolicy, ComparableSchema} from "@sugoi/core";
-
-export {ParametersValidatorUtil}
 
 export {RequestSchemaPolicy} from "./decorators/request-schema-policy.decorator";
 
@@ -21,6 +28,8 @@ export {HttpServer} from "./classes/http-server.class";
 export {ModuleItem} from "./interfaces/module-item.interface";
 
 export * from "./decorators/express-utils.decorator"
+
+
 
 
 

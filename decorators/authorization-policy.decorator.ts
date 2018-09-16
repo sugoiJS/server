@@ -1,7 +1,7 @@
 import {UsePolicy} from "@sugoi/core";
 import {ParametersValidatorUtil} from "../utils/parameters-validator.util";
 
-const AuthorizationPolicy = function (requiredRole = null) {
+export const Authorized = function (requiredRole = null, failedCode: number = 401) {
 
-    return UsePolicy('ParametersValidatorUtil.validateRequest', 400, {requiredRole});
+    return UsePolicy("AuthorizationUtils.isAuthorized", failedCode, {requiredRole});
 };
