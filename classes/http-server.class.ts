@@ -189,6 +189,7 @@ export class HttpServer {
         new module();
         const rootModuleMeta = Reflect.getMetadata(this.moduleMetaKey, module);
         for (const service of rootModuleMeta.services) {
+            container.bind(Symbol.for(service)).to(service);
             container.bind(service).to(service);
         }
         rootModuleMeta.modules = rootModuleMeta.modules || [];
@@ -196,6 +197,7 @@ export class HttpServer {
             const metadata = Reflect.getMetadata(this.moduleMetaKey, mod);
             const {services, modules} = metadata;
             for (const service of services) {
+                container.bind(Symbol.for(service)).to(service);
                 container.bind(service).to(service);
             }
             if (modules)
