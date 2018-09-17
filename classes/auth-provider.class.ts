@@ -11,6 +11,7 @@ export abstract class AuthProvider<T=any> implements interfaces.AuthProvider, in
     public setRequestData(request:e.Request){
         this.headers = request.headers;
         this.cookies = request.cookies;
+        return this;
     }
 
     abstract isAuthenticated(req?: e.Request): Promise<boolean>;

@@ -20,23 +20,26 @@ export class AuthorizationUtils {
         const request = Array.isArray(args.functionArgs) ? ParametersValidatorUtil.getRequestFromArgs(args.functionArgs) : null;
         let provider;
         if(request){
-            provider = request.container.get(Symbol.for("AuthProvider"));
+            provider = request["AuthProvider"];
         }
         if(!request || !provider)
-            throw new SugoiPolicyError("Unable to inject provider", 5005);
+            throw new SugoiPolicyError("Unable to get provider", 5005);
         payload["request"] = request;
         return provider.isAuthenticated(request)
             .then((res) => {
-                if(!res) return false;
+                if(!res) return "Not authenticated";
                 return payload.requiredRole != null
                     ? provider.isInRole(payload.requiredRole)
                     : res
             })
             .then((res) => {
-                if(!res) return false;
+                if(!res) return "Not in role";
                 return payload.permissions && payload.permissions.length > 0
                     ? provider.isAllowedTo(...payload.permissions)
                     :res;
+            }).then((res) => {
+                if(!res) return "Don't have permissions";
+                else return true;
             })
             .catch(err=>{
                 console.log(err);
