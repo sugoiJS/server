@@ -25,8 +25,10 @@ export class HttpServer {
         (function (app) {
             app.use((function (req, res, next) {
                 req['container'] = this.container;
-                const AuthProvider = (<Container>req.container).get<AuthProvider>(Symbol.for("AuthProvider"));
-                req['AuthProvider'] = (<any>AuthProvider.constructor).builder().setRequestData(req);
+                if((<Container>req.container).isBound(Symbol.for("AuthProvider"))) {
+                    const AuthProvider = (<Container>req.container).get<AuthProvider>(Symbol.for("AuthProvider"));
+                    req['AuthProvider'] = (<any>AuthProvider.constructor).builder().setRequestData(req);
+                }
                 next();
             }).bind(this));
         }).bind(this),
