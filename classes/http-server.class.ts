@@ -255,7 +255,7 @@ export class HttpServer {
         service = container.get(service);
         const insRef = {
             factory:(function(){return service}).bind(service)
-        }
+        };
         container.bind(serviceName).toFactory(insRef.factory);
         container.bind(Symbol.for(serviceName)).toFactory(insRef.factory);
     }
