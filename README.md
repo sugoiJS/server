@@ -18,6 +18,48 @@ SugoiJS server uses [inversify](https://www.npmjs.com/package/inversify), [inver
 
 > npm install --save @sugoi/server
 
+### tsconfig.json:
+
+Under your tsconfig - compilerOptions set:
+
+- `"target": "es5"`
+
+- `"emitDecoratorMetadata": true`
+
+- `"experimentalDecorators": true`
+
+- `"lib": ["es2015","dom"]`
+
+
+#### Template
+
+You are able to use the config template which was set for the @sugoi/demo application:
+
+    {
+      "compilerOptions": {
+        "baseUrl": "./src",
+        "allowJs": true,
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": [
+          "es2015",
+          "dom"
+        ],
+        "typeRoots": [
+          "./node_modules/@types"
+        ],
+        "types": [
+          "body-parser",
+          "express",
+          "node"
+        ]
+      }
+    }
+
 ### Bootstrapping
 
 To boostrap you server use the 'init' method:
