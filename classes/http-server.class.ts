@@ -25,9 +25,12 @@ export class HttpServer {
         (function (app) {
             app.use((function (req, res, next) {
                 req['container'] = this.container;
+                const AuthProvider = (<Container>req.container).get<AuthProvider>(Symbol.for("AuthProvider"));
+                req['AuthProvider'] = (<any>AuthProvider.constructor).builder().setRequestData(req);
                 next();
-            }).bind(this))
-        }).bind(this)
+            }).bind(this));
+        }).bind(this),
+
     ];
     private middlewares: Array<IExpressCallback> = [];
     private viewMiddleware: Array<IExpressCallback> = [];
@@ -148,7 +151,7 @@ export class HttpServer {
             ? app.use(route, express.static(pathToStatic))
             : app.use(express.static(pathToStatic));
         this.viewMiddleware.splice(0, 0, cb);
-        return this
+        return this;
     }
 
     /**
@@ -216,18 +219,14 @@ export class HttpServer {
         new module();
         const rootModuleMeta = Reflect.getMetadata(this.moduleMetaKey, module);
         for (const service of rootModuleMeta.services) {
-            container.bind(Symbol.for(service)).to(service);
-            container.bind(service.name).to(service);
-            container.bind(service).to(service);
+            this.registerService(container, service);
         }
         rootModuleMeta.modules = rootModuleMeta.modules || [];
         for (const mod of rootModuleMeta.modules) {
             const metadata = Reflect.getMetadata(this.moduleMetaKey, mod);
             const {services, modules} = metadata;
             for (const service of services) {
-                container.bind(Symbol.for(service)).to(service);
-                container.bind(service.name).to(service);
-                container.bind(service).to(service);
+                this.registerService(container, service);
             }
             if (modules)
                 modules.forEach(subModule => this.loadModules(subModule, container));
@@ -248,6 +247,17 @@ export class HttpServer {
 
     public getInstanceId() {
         return this.instanceId;
+    }
+
+    private registerService(container: Container, service) {
+        const serviceName = service.name;
+        container.bind(service).to(service).inSingletonScope();
+        service = container.get(service);
+        const insRef = {
+            factory:(function(){return service}).bind(service)
+        }
+        container.bind(serviceName).toFactory(insRef.factory);
+        container.bind(Symbol.for(serviceName)).toFactory(insRef.factory);
     }
 }
 

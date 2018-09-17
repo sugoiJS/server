@@ -79,7 +79,6 @@ export {
     RequestHeaders,
     Cookies,
     Next,
-    InjectHttpContext,
     injectHttpContext,
     getRouteInfo,
     BaseMiddleware,

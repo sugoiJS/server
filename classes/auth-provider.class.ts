@@ -1,11 +1,17 @@
 import {interfaces} from "inversify-express-utils";
-import * as e from "express";
-import {TNewable} from "../interfaces/newable.type";
 import {Injectable} from "@sugoi/core";
+import e = require("express");
 
 @Injectable()
 export abstract class AuthProvider<T=any> implements interfaces.AuthProvider, interfaces.Principal {
+    cookies: any;
+    headers: any;
     details: any;
+
+    public setRequestData(request:e.Request){
+        this.headers = request.headers;
+        this.cookies = request.cookies;
+    }
 
     abstract isAuthenticated(req?: e.Request): Promise<boolean>;
 
@@ -23,5 +29,9 @@ export abstract class AuthProvider<T=any> implements interfaces.AuthProvider, in
 
     setUserData(userData:T): void {
         this.details = userData;
+    }
+
+    static builder(){
+        return new (<any>this)();
     }
 }

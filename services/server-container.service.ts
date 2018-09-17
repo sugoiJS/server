@@ -4,7 +4,7 @@ import {Container, interfaces, ContainerService} from "@sugoi/core";
 export class ServerContainerService extends ContainerService {
     static containersMap: Map<string, Container> = new Map();
 
-    static initContainer(config: interfaces.ContainerOptions = {defaultScope: "Transient", autoBindInjectable: true}) {
+    static initContainer(config: interfaces.ContainerOptions = {defaultScope: "Transient"}) {
         super.initContainer(config);
     }
 
