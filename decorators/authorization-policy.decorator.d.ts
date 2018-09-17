@@ -1,0 +1,1 @@
+export declare const Authorized: (requiredRole?: string | number, permissions?: string | number[], failedCode?: number) => (contextClass: any, propertyKey: string, descriptor: PropertyDescriptor) => void;
