@@ -14,7 +14,7 @@ export abstract class AuthProvider<T=any> implements interfaces.AuthProvider, in
         return this;
     }
 
-    abstract isAuthenticated(req?: e.Request): Promise<boolean>;
+    abstract isAuthenticated(): Promise<boolean>;
 
     abstract isResourceOwner(resourceId: any): Promise<boolean>;
 
