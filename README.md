@@ -64,7 +64,7 @@ You are able to use the config template which was set for the @sugoi/demo applic
 
 To boostrap you server use the 'init' method:
 
-    init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider, container?: inversify.Container)
+    init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider)
 
 when boostrapModule is the entry point module
 
