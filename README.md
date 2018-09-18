@@ -152,7 +152,7 @@ later we will be able to inject the service instance by:
  
  #### Return the value from the "container"
    
-   The (InversifyJS container)[https://github.com/inversify/InversifyJS/blob/master/wiki/container_api.md] is handling the singleton objects.
+   The [InversifyJS container](https://github.com/inversify/InversifyJS/blob/master/wiki/container_api.md) is handling the singleton objects.
    
    The container is stored on the server instance, each request and the `ServerContainerService` by the instanceId
    
