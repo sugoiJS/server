@@ -252,6 +252,85 @@ Example:
         }
 
     }
+    
+    
+### Authorized
+    /**
+     *  requiredRole: TStringOrNumber|TStringOrNumber[] - The required role(s)
+     *  permissions: TStringOrNumber|TStringOrNumber[]  - The required premission(s)
+     *  failedCode: number                              - The response code in case the policy will fail
+     **/
+    Authorized(requiredRole: TStringOrNumber|TStringOrNumber[] = null, permissions: TStringOrNumber|TStringOrNumber[] = null, failedCode: number = 401)
+
+The `Authorized` decorator use for validate the user is Authorized and in the right role and permissions(optional).
+
+In case null will pass the value won't check.
+
+The Authorized policy will use the AuthProvider which pass while the server init:
+    `init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider)`
+
+The AuthProvider will init for each request, the AuthProvider holding the request headers & cookies.
+
+Example:
+    
+    export class Authorization extends AuthProvider<User> {
+
+
+        /**
+         * Verify if user is authorized
+         *
+         * Implemented dummy check for x-sug-demo header to be equal to "Wyn1RRR9PQJPaqYM"
+         *
+         * @returns {Promise<boolean>}
+         */
+        isAuthenticated(): Promise<boolean> {
+            return Promise.resolve(this.headers["x-sug-demo"] === "Wyn1RRR9PQJPaqYM");
+        }
+
+        getUser(req?: e.Request, res?: e.Response, next?: e.NextFunction): Promise<any> {
+            return this.details 
+                ?   Promise.resolve(this.details)
+                : UserService.getUser(UserService.getIdFromCookie(this.cookie))
+                              .then((user:User)=>{
+                                this.details = user;
+                                return user;
+                              })
+        }
+
+        isInRole(...roles: Array<string | number>): Promise<boolean> {
+            return this.getUser().then(user=>roles.includes(user.role));
+
+        }
+
+        isAllowedTo(...permissions: Array<string | number>): Promise<boolean> {
+            return this.getUser().then(user=>permissions.every(permission=>user.permissions.includes(permission)));
+        }
+        
+        isResourceOwner(resourceId: any): Promise<boolean> {
+            return this.getUser().then(user=>Resources.checkIfOwner(resourceId,user.id));
+        }
+
+    }
+    
+    `init(boostrapModule,"/",null, Authorization)`
+
+
+
+Example:
+
+    @Controller('/dashboard')
+    export class DashboardController {
+        constructor() {
+        }
+
+        @HttpPost("/:id")
+        @Authorized(["User","Admin"],"User.READ")
+        getUser(@RequestParam("id") id:number, @RequestBody("role") role:{text:string}) {
+            return User.findOne({id,role.text})
+        }
+
+    }
+
 
 ## Documentation
 
