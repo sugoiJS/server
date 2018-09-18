@@ -64,7 +64,7 @@ You are able to use the config template which was set for the @sugoi/demo applic
 
 To boostrap you server use the 'init' method:
 
-    init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider, container?: inversify.Container)
+    init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider)
 
 when boostrapModule is the entry point module
 
@@ -140,14 +140,33 @@ For setting class as service the class must be decorated with `@Injectable` deco
         }
     }
 
-later we will be able to inject the service instance:
+later we will be able to inject the service instance by:
 
- - `@Inject(MyService)`
+#### Variable binding
 
- - `@Inject("MyService")`
+ - `@Inject(MyService) private myService:MyService`
 
- - `constructor(myService:MyService)`
+ - `@Inject("MyService") private myService:MyService`
 
+ - `constructor(private myService:MyService)`
+ 
+ #### Return the value from the "container"
+   
+   The [InversifyJS container](https://github.com/inversify/InversifyJS/blob/master/wiki/container_api.md) is handling the singleton objects.
+   
+   The container is stored on the server instance, each request and the `ServerContainerService` by the instanceId
+   
+ - `server.container`
+ 
+ -  `req.container`
+ 
+ - `ServerContainerService.getContainerById(serverInstanceId)`
+ 
+ After retriving the container we will able to get the service instance:
+ 
+ - `private myService:MyService = container.get(MyService)`
+
+ - `private myService:MyService = container.get("MyService")`
 
 ### Setting middlewares and Error handlers
 For setting static file serving use:
@@ -229,10 +248,98 @@ Example:
                               {"role": ComparableSchema.ofType({text: ComparableSchema.ofType(SchemaTypes.STRING).setRegex("([A-Z])+","i")})})
                               //body schema is {role:{text:string//with regex /([A-Z])+/i}}
         getUser(@RequestParam("id") id:number, @RequestBody("role") role:{text:string}) {
-            return User.findOne({id,role.text})
+            return User.findOne({id,role:role.text})
         }
 
     }
+    
+    
+### Authorized
+    /**
+     *  requiredRole: TStringOrNumber|TStringOrNumber[] - The required role(s)
+     *  permissions: TStringOrNumber|TStringOrNumber[]  - The required premission(s)
+     *  failedCode: number                              - The response code in case the policy will fail
+     **/
+    Authorized(requiredRole: TStringOrNumber|TStringOrNumber[] = null, permissions: TStringOrNumber|TStringOrNumber[] = null, failedCode: number = 401)
+
+The `Authorized` decorator use for validate the user is Authorized and in the right role and permissions(optional).
+
+In case null will pass the value won't check.
+
+The Authorized policy will use the AuthProvider which pass while the server init:
+    `init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider)`
+
+The AuthProvider will init for each request, the AuthProvider holding the request headers & cookies.
+
+Example:
+    
+##### Authorization.class.ts:
+    
+    export class Authorization extends AuthProvider<User> {
+
+
+        /**
+         * Verify if user is authorized
+         *
+         * Implemented dummy check for x-sug-demo header to be equal to "Wyn1RRR9PQJPaqYM"
+         *
+         * @returns {Promise<boolean>}
+         */
+        isAuthenticated(): Promise<boolean> {
+            return Promise.resolve(this.headers["x-sug-demo"] === "Wyn1RRR9PQJPaqYM");
+        }
+
+        getUser(req?: e.Request, res?: e.Response, next?: e.NextFunction): Promise<any> {
+            return this.details 
+                ?   Promise.resolve(this.details)
+                : UserService.getUser(UserService.getIdFromCookie(this.cookie))
+                              .then((user:User)=>{
+                                this.details = user;
+                                return user;
+                              })
+        }
+
+        isInRole(...roles: Array<string | number>): Promise<boolean> {
+            return this.getUser().then(user=>roles.includes(user.role));
+
+        }
+        
+        /**
+        * Check if on of user has some of the permissions.
+        **/
+        isAllowedTo(...permissions: Array<string | number>): Promise<boolean> {
+            return this.getUser().then(user=>permissions.some(permission=>user.permissions.includes(permission)));
+        }
+        
+        isResourceOwner(resourceId: any): Promise<boolean> {
+            return this.getUser().then(user=>Resources.checkIfOwner(resourceId,user.id));
+        }
+
+    }
+    
+##### app.ts:
+    
+    `init(boostrapModule,"/",null, Authorization)`
+
+
+
+##### dashboard.controller.ts:
+
+    @Controller('/dashboard')
+    export class DashboardController {
+        constructor() {
+        }
+
+        @HttpPost("/:id")
+        @Authorized(["User","Admin"],"User.READ")
+        @Authorized(null,"User.READ_BY_ID") // This case promise the user have both "User.READ" AND "User.READ_BY_ID" permissions
+        getUser(@RequestParam("id") id:number, @RequestBody("role") role:{text:string}) {
+            return User.findOne({id,role:role.text})
+        }
+
+    }
+
+
 
 ## Documentation
 
