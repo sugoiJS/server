@@ -1,7 +1,8 @@
 import {UsePolicy} from "@sugoi/core";
 import {ParametersValidatorUtil} from "../utils/parameters-validator.util";
 
-export const Authorized = function (requiredRole: string | number = null, permissions: string | number[] = null, failedCode: number = 401) {
+export type TStringOrNumber = string | number;
+export const Authorized = function (requiredRole: TStringOrNumber|TStringOrNumber[] = null, permissions: TStringOrNumber|TStringOrNumber[] = null, failedCode: number = 401) {
 
-    return UsePolicy("SugIsAuthorized", failedCode, {requiredRole});
+    return UsePolicy("SugIsAuthorized", failedCode, {requiredRole,permissions});
 };

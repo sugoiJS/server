@@ -1,5 +1,6 @@
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 import {AuthorizationUtils} from "./utils/authorization.utils";
+export {TStringOrNumber} from "./decorators/authorization-policy.decorator";
 
 export {AuthProvider} from "./classes/auth-provider.class";
 

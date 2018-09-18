@@ -219,16 +219,20 @@ export class HttpServer {
 
     protected loadModules(module: any, container: Container) {
         new module();
-        const rootModuleMeta = Reflect.getMetadata(this.moduleMetaKey, module);
-        for (const service of rootModuleMeta.services) {
-            this.registerService(container, service);
+        const rootModuleMeta = Reflect.getMetadata(this.moduleMetaKey, module) || {};
+        if(Array.isArray(rootModuleMeta.services)) {
+            for (const service of rootModuleMeta.services) {
+                this.registerService(container, service);
+            }
         }
         rootModuleMeta.modules = rootModuleMeta.modules || [];
         for (const mod of rootModuleMeta.modules) {
             const metadata = Reflect.getMetadata(this.moduleMetaKey, mod);
             const {services, modules} = metadata;
-            for (const service of services) {
-                this.registerService(container, service);
+            if(Array.isArray(services)) {
+                for (const service of services) {
+                    this.registerService(container, service);
+                }
             }
             if (modules)
                 modules.forEach(subModule => this.loadModules(subModule, container));

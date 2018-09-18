@@ -3,6 +3,7 @@ import {ParametersValidatorUtil} from "./parameters-validator.util";
 import {SugoiPolicyError} from "@sugoi/core/dist/policies/exceptions/policy-error.exception";
 import {AuthProvider} from "../classes/auth-provider.class";
 import {EXCEPTIONS} from "../constants/exceptions.constant";
+import {TStringOrNumber} from "../decorators/authorization-policy.decorator";
 
 
 export class AuthorizationUtils {
@@ -10,7 +11,7 @@ export class AuthorizationUtils {
     @Policy("SugIsAuthorized")
     static async isAuthorized(args: {
         functionArgs: any[],
-        policyMeta: [{ requiredRole: string | number, permissions: Array<string | number> }]
+        policyMeta: [{ requiredRole: TStringOrNumber| TStringOrNumber[], permissions: TStringOrNumber| TStringOrNumber[] }]
     }): Promise<boolean> {
 
 
@@ -29,17 +30,23 @@ export class AuthorizationUtils {
         return await provider.isAuthenticated(request)
             .then((res) => {
                 if (res != true) throw new SugoiPolicyError("Not authenticated", EXCEPTIONS.POLICY_HANDLED_EXCEPTION.code);
-                return payload.requiredRole != null
-                    ? provider.isInRole(payload.requiredRole)
+                if(payload.requiredRole && !Array.isArray(payload.requiredRole))
+                    payload.requiredRole = [payload.requiredRole];
+                payload.requiredRole = payload.requiredRole as TStringOrNumber[];
+                return payload.requiredRole && payload.requiredRole.length > 0
+                    ? provider.isInRole(...payload.requiredRole)
                     : res
             })
             .then((res) => {
                 if (res != true) throw new SugoiPolicyError("Not in role", EXCEPTIONS.POLICY_HANDLED_EXCEPTION.code,payload.requiredRole);
+                if(payload.permissions && !Array.isArray(payload.permissions))
+                    payload.permissions = [payload.permissions] ;
+                payload.permissions = payload.permissions as TStringOrNumber[];
                 return payload.permissions && payload.permissions.length > 0
                     ? provider.isAllowedTo(...payload.permissions)
                     : res;
             }).then((res) => {
-                if (res != true) throw new SugoiPolicyError("Doesn't have permissions", EXCEPTIONS.POLICY_HANDLED_EXCEPTION.code,...payload.permissions);
+                if (res != true) throw new SugoiPolicyError("Doesn't have permissions", EXCEPTIONS.POLICY_HANDLED_EXCEPTION.code,...payload.permissions as TStringOrNumber[]);
                 else return true;
             })
             .catch(err => {

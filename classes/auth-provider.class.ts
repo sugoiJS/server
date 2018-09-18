@@ -1,6 +1,7 @@
 import {interfaces} from "inversify-express-utils";
 import {Injectable} from "@sugoi/core";
 import e = require("express");
+import {TStringOrNumber} from "../decorators/authorization-policy.decorator";
 
 @Injectable()
 export abstract class AuthProvider<T=any> implements interfaces.AuthProvider, interfaces.Principal {
@@ -20,7 +21,7 @@ export abstract class AuthProvider<T=any> implements interfaces.AuthProvider, in
 
     abstract getUser(req: e.Request, res: e.Response, next: e.NextFunction): Promise<any>;
 
-    abstract isInRole(role: string | number): Promise<boolean>;
+    abstract isInRole(...roles: TStringOrNumber[]): Promise<boolean>;
 
     abstract isAllowedTo(...permissions: Array<string | number>): Promise<boolean>;
 
