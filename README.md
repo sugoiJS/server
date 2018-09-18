@@ -248,7 +248,7 @@ Example:
                               {"role": ComparableSchema.ofType({text: ComparableSchema.ofType(SchemaTypes.STRING).setRegex("([A-Z])+","i")})})
                               //body schema is {role:{text:string//with regex /([A-Z])+/i}}
         getUser(@RequestParam("id") id:number, @RequestBody("role") role:{text:string}) {
-            return User.findOne({id,role.text})
+            return User.findOne({id,role:role.text})
         }
 
     }
@@ -272,6 +272,8 @@ The Authorized policy will use the AuthProvider which pass while the server init
 The AuthProvider will init for each request, the AuthProvider holding the request headers & cookies.
 
 Example:
+    
+##### Authorization.class.ts:
     
     export class Authorization extends AuthProvider<User> {
 
@@ -301,9 +303,12 @@ Example:
             return this.getUser().then(user=>roles.includes(user.role));
 
         }
-
+        
+        /**
+        * Check if on of user has some of the permissions.
+        **/
         isAllowedTo(...permissions: Array<string | number>): Promise<boolean> {
-            return this.getUser().then(user=>permissions.every(permission=>user.permissions.includes(permission)));
+            return this.getUser().then(user=>permissions.some(permission=>user.permissions.includes(permission)));
         }
         
         isResourceOwner(resourceId: any): Promise<boolean> {
@@ -312,11 +317,13 @@ Example:
 
     }
     
+##### app.ts:
+    
     `init(boostrapModule,"/",null, Authorization)`
 
 
 
-Example:
+##### dashboard.controller.ts:
 
     @Controller('/dashboard')
     export class DashboardController {
@@ -325,11 +332,13 @@ Example:
 
         @HttpPost("/:id")
         @Authorized(["User","Admin"],"User.READ")
+        @Authorized(null,"User.READ_BY_ID") // This case promise the user have both "User.READ" AND "User.READ_BY_ID" permissions
         getUser(@RequestParam("id") id:number, @RequestBody("role") role:{text:string}) {
-            return User.findOne({id,role.text})
+            return User.findOne({id,role:role.text})
         }
 
     }
+
 
 
 ## Documentation
