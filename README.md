@@ -140,14 +140,33 @@ For setting class as service the class must be decorated with `@Injectable` deco
         }
     }
 
-later we will be able to inject the service instance:
+later we will be able to inject the service instance by:
 
- - `@Inject(MyService)`
+#### Variable binding
 
- - `@Inject("MyService")`
+ - `@Inject(MyService) private myService:MyService`
 
- - `constructor(myService:MyService)`
+ - `@Inject("MyService") private myService:MyService`
 
+ - `constructor(private myService:MyService)`
+ 
+ #### Return the value from the "container"
+   
+   The (InversifyJS container)[https://github.com/inversify/InversifyJS/blob/master/wiki/container_api.md] is handling the singleton objects.
+   
+   The container is stored on the server instance, each request and the `ServerContainerService` by the instanceId
+   
+ - `server.container`
+ 
+ -  `req.container`
+ 
+ - `ServerContainerService.getContainerById(serverInstanceId)`
+ 
+ After retriving the container we will able to get the service instance:
+ 
+ - `private myService:MyService = container.get(MyService)`
+
+ - `private myService:MyService = container.get("MyService")`
 
 ### Setting middlewares and Error handlers
 For setting static file serving use:
