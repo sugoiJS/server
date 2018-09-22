@@ -1,5 +1,6 @@
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 import {AuthorizationUtils} from "./utils/authorization.utils";
+
 export {TStringOrNumber} from "./decorators/authorization-policy.decorator";
 
 export {AuthProvider} from "./classes/auth-provider.class";
@@ -28,9 +29,9 @@ export {HttpServer} from "./classes/http-server.class";
 
 export {ModuleItem} from "./interfaces/module-item.interface";
 
-export * from "./decorators/express-utils.decorator"
+export * from "./decorators/express-utils.decorator";
 
-
+export * from "./core-utils";
 
 
 
