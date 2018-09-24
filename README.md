@@ -89,7 +89,7 @@ After setting the middlewares and error handlers, build and listen to requests b
 This call will return http.Server instance which can be use for setting app variables, socket server and more.
 
 ### Set module
-Creating a module requires you to should use the @ServerModule decorator
+Creating a module requires you to use the @ServerModule decorator
 
     import {ServerModule} from "@sugoi/server"
 
