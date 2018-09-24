@@ -74,6 +74,53 @@ when boostrapModule is the entry point module
 
     const server:HttpServer = HttpServer.init(ServerModule,"/api");
 
+
+
+### Setting middlewares and Error handlers
+For setting static file serving use:
+
+    setStatic(pathToStatic:string,route?:string)
+
+For setting middlewares use:
+
+    setMiddlewares(...(app)=>void)
+
+For setting error handlers use:
+
+    setErrorHandlers((app) => void)
+
+Full example:
+
+    (<HttpServer>server)
+        .setStatic("assets/admin","/admin")
+        .setStatic("assets/main")
+        .setMiddlewares((app) => {
+            app.use(bodyParser.json());
+            app.use(compression());
+            if (DEVELOPMENT) {
+                app.set('json spaces', 2);
+                app.use(cors());
+                app.use(require('morgan')('dev'));
+            }
+            app.use(express.static(paths.static));
+        })
+        .setErrorHandlers((app) => {
+            app.use(function (req, res, next) {
+                return res.sendFile(path.resolve(paths.index))
+            });
+            app.use((req,res,next)=>{
+                return function(err){
+                    if(err instanceof SugoiServerError){
+                        console.log.error(err.stack);
+                        console.log.error(`${err.message} ${JSON.stringify(err.data)});
+                        res.status(500).send("Internal error");
+                    }
+                }
+            });
+        });
+
+
+
 ### Build & listen
 After setting the middlewares and error handlers, build and listen to requests by:
 
@@ -167,50 +214,6 @@ later we will be able to inject the service instance by:
  - `private myService:MyService = container.get(MyService)`
 
  - `private myService:MyService = container.get("MyService")`
-
-### Setting middlewares and Error handlers
-For setting static file serving use:
-
-    setStatic(pathToStatic:string,route?:string)
-
-For setting middlewares use:
-
-    setMiddlewares(...(app)=>void)
-
-For setting error handlers use:
-
-    setErrorHandlers((app) => void)
-
-Full example:
-
-    (<HttpServer>server)
-        .setStatic("assets/admin","/admin")
-        .setStatic("assets/main")
-        .setMiddlewares((app) => {
-            app.use(bodyParser.json());
-            app.use(compression());
-            if (DEVELOPMENT) {
-                app.set('json spaces', 2);
-                app.use(cors());
-                app.use(require('morgan')('dev'));
-            }
-            app.use(express.static(paths.static));
-        })
-        .setErrorHandlers((app) => {
-            app.use(function (req, res, next) {
-                return res.sendFile(path.resolve(paths.index))
-            });
-            app.use((req,res,next)=>{
-                return function(err){
-                    if(err instanceof SugoiServerError){
-                        console.log.error(err.stack);
-                        console.log.error(`${err.message} ${JSON.stringify(err.data)});
-                        res.status(500).send("Internal error");
-                    }
-                }
-            });
-        });
-
 
 
 ## Policies
