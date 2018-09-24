@@ -247,8 +247,8 @@ Example:
                               null,
                               {"role": ComparableSchema.ofType({text: ComparableSchema.ofType(SchemaTypes.STRING).setRegex("([A-Z])+","i")})})
                               //body schema is {role:{text:string//with regex /([A-Z])+/i}}
-        getUser(@RequestParam("id") id:number, @RequestBody("role") role:{text:string}) {
-            return User.findOne({id,role:role.text})
+        getUser(@RequestParam("id") id:number, @RequestBody() body:{role:{text:string}}) {
+            return User.findOne({id,role:body.role.text})
         }
 
     }
@@ -333,8 +333,8 @@ Example:
         @HttpPost("/:id")
         @Authorized(["User","Admin"],"User.READ")
         @Authorized(null,"User.READ_BY_ID") // This case promise the user have both "User.READ" AND "User.READ_BY_ID" permissions
-        getUser(@RequestParam("id") id:number, @RequestBody("role") role:{text:string}) {
-            return User.findOne({id,role:role.text})
+        getUser(@RequestParam("id") id:number, @RequestBody() body:{role:{text:string}}) {
+            return User.findOne({id,role:body.role.text})
         }
 
     }
