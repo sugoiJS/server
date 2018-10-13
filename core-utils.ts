@@ -9,5 +9,16 @@ export {
     Decorate,
     Optional,
     interfaces,
-    LazyServiceIdentifer
+    LazyServiceIdentifer,
+    ComparableSchema,
+    SchemaTypes,
+    ValidateArgs,
+    ValidateSchemaUtil,
+    TComparableSchema,
+    Policy,
+    UsePolicy,
+    ValidateSchemaPolicy,
+    PolicySchemaValidator,
+    TPolicy,
+    TPolicyResults
 } from "@sugoi/core"
