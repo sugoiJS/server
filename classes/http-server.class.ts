@@ -1,3 +1,4 @@
+import {StringUtils, Container, Injectable} from '@sugoi/core';
 import {InversifyExpressServer} from 'inversify-express-utils';
 import {IExpressCallback} from "../interfaces/express-callback.interface";
 import {IModuleMetadata} from "../interfaces/module-meta.interface";
@@ -9,9 +10,7 @@ import {Application} from "express";
 import {AuthProvider} from "./auth-provider.class";
 import {Server} from "http";
 import {SUGOI_ICON} from "../constants/icons";
-import {Container, Injectable} from '@sugoi/core';
 import {TNewable} from "../interfaces/newable.type";
-import {StringUtils} from "@sugoi/core/dist/policies/utils/string.util";
 import {ServerContainerService} from "../services/server-container.service";
 
 export class HttpServer {
@@ -25,7 +24,7 @@ export class HttpServer {
         (function (app) {
             app.use((function (req, res, next) {
                 req['container'] = this.container;
-                if((<Container>req.container).isBound(Symbol.for("AuthProvider"))) {
+                if ((<Container>req.container).isBound(Symbol.for("AuthProvider"))) {
                     const AuthProvider = (<Container>req.container).get<AuthProvider>(Symbol.for("AuthProvider"));
                     req['AuthProvider'] = (<any>AuthProvider.constructor).builder().setRequestData(req);
                 }
@@ -196,11 +195,20 @@ export class HttpServer {
      * instance store in a map for later use
      *
      * @param {number} port
+     * @param {string} hostname
      * @param {Function} callback
      * @returns {"http".Server}
      */
-    public listen(port: number, callback: Function = (err?) => {
+    public listen(port: number);
+    public listen(port: number, callback: Function);
+    public listen(port: number, hostname: string);
+    public listen(port: number, hostname: string, callback: Function);
+    public listen(port: number, hostname?: Function | string, callback: Function = (err?) => {
     }): Server {
+        if(typeof hostname === "function"){
+            callback = hostname;
+            hostname = null;
+        }
         const server = this.httpListeners.has(this.instanceId)
             ? this.httpListeners.get(this.instanceId)
             : null;
@@ -208,7 +216,7 @@ export class HttpServer {
             return callback(`No server instance found for port ${port}`);
         }
 
-        return server.listen(port, null, err => {
+        return server.listen(port, hostname as string, err => {
             if (!err) {
                 console.log(SUGOI_ICON);
             }
@@ -220,7 +228,7 @@ export class HttpServer {
     protected loadModules(module: any, container: Container) {
         new module();
         const rootModuleMeta = Reflect.getMetadata(this.moduleMetaKey, module) || {};
-        if(Array.isArray(rootModuleMeta.services)) {
+        if (Array.isArray(rootModuleMeta.services)) {
             for (const service of rootModuleMeta.services) {
                 this.registerService(container, service);
             }
@@ -229,7 +237,7 @@ export class HttpServer {
         for (const mod of rootModuleMeta.modules) {
             const metadata = Reflect.getMetadata(this.moduleMetaKey, mod);
             const {services, modules} = metadata;
-            if(Array.isArray(services)) {
+            if (Array.isArray(services)) {
                 for (const service of services) {
                     this.registerService(container, service);
                 }
@@ -260,7 +268,9 @@ export class HttpServer {
         container.bind(service).to(service).inSingletonScope();
         service = container.get(service);
         const insRef = {
-            factory:(function(){return service}).bind(service)
+            factory: (function () {
+                return service
+            }).bind(service)
         };
         container.bind(serviceName).toFactory(insRef.factory);
         container.bind(Symbol.for(serviceName)).toFactory(insRef.factory);
