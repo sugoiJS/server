@@ -31,12 +31,12 @@
   ],
   "homepage": "sugoijs.com",
   "bugs": {
-    "url": "https://github.com/sugoiJS/Core/issues",
+    "url": "https://github.com/sugoiJS/server/issues",
     "email": "oba.sugoi@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sugoiJS/Core"
+    "url": "https://github.com/sugoiJS/server"
   },
   "author": "Orel Balilti",
   "license": "MIT",

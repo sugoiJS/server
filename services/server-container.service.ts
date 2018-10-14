@@ -5,7 +5,7 @@ export class ServerContainerService extends ContainerService {
     static containersMap: Map<string, Container> = new Map();
 
     static initContainer(config: interfaces.ContainerOptions = {defaultScope: "Transient"}) {
-        super.initContainer(config);
+        return super.initContainer(config);
     }
 
     static setContainerForId(id: string) {
