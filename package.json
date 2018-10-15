@@ -1,0 +1,64 @@
+{
+  "name": "@sugoi/server",
+  "version": "3.0.0",
+  "description": "SugoiJS server module, relays on express and inversify",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "jest --config=jest.config.js --coverage --detectOpenHandles",
+    "coverage": "jest --coverage --coverageReporters=text-lcov  --detectOpenHandles | curl -s https://codecov.io/bash | bash",
+    "docs": "..\\node_modules\\.bin\\typedoc --out ..\\dist\\docs\\server --excludeNotExported --excludeProtected --excludePrivate --readme .\\README.md --mode file --hideGenerator",
+    "build:publish": "npm run build && npm test",
+    "update:patch": "npm version patch && npm publish && npm run docs",
+    "update:minor": "npm version minor && npm publish && npm run docs",
+    "update:major": "npm version major && npm publish && npm run docs",
+    "build": "rmdir /s dist && tsc"
+  },
+  "files": [
+    "**/*"
+  ],
+  "keywords": [
+    "sugoi",
+    "sugoiJS",
+    "@sugoi",
+    "@sugoiJS",
+    "server",
+    "inversify",
+    "decorator",
+    "annotation",
+    "express",
+    "gaurds",
+    "policies",
+    "policy"
+  ],
+  "homepage": "sugoijs.com",
+  "bugs": {
+    "url": "https://github.com/sugoiJS/server/issues",
+    "email": "oba.sugoi@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sugoiJS/server"
+  },
+  "author": "Orel Balilti",
+  "license": "MIT",
+  "dependencies": {
+    "@sugoi/core": "^3.0.1",
+    "express": "^4.16.3",
+    "inversify-express-utils": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.16.0",
+    "@types/jest": "^23.3.2",
+    "@types/node": "^10.3.2",
+    "axios": "^0.18.0",
+    "jest": "^23.6.0",
+    "moxios": "^0.4.0",
+    "supertest": "^3.3.0",
+    "ts-jest": "^23.10.1"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "./coverage"
+  }
+}
