@@ -143,8 +143,8 @@ describe("sub modules check", () => {
     afterEach(() => {
         moxios.uninstall();
     });
-    it("#get /sub1", () => {
-        request(server)
+    it("#get /sub1", async () => {
+        await request(server)
             .get('/sub1')
             .expect(200, {message: "hello"});
     })
