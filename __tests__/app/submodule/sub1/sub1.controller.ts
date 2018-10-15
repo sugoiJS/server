@@ -7,9 +7,6 @@ export class Sub1Controller{
 
     @HttpGet("/")
     public async test(){
-        // const response = new HttpResponseMessage(200);
-        // response.content = new StringContent(this.sub1Service.message);
-        // return response;
         return {message:this.sub1Service.message};
     }
 }

@@ -9,6 +9,7 @@ import {
     RequestParam
 } from "../../../index";
 import {AuthService} from "../services/auth.service";
+import {SugoiServerError} from "../../../exceptions/server.exception";
 
 @Authorized()
 @Controller("/index")
@@ -26,7 +27,12 @@ export class IndexController {
     public async isOwner(@Request() req,
                          @RequestParam("id") id: string) {
         return await (<AuthService>req.getAuthProvider()).isResourceOwner(id)
-            .then((valid) => valid ? IndexController.validResponse : {valid:false});
+            .then((valid) => {
+            if(valid)
+                return IndexController.validResponse;
+            else
+                throw new SugoiServerError("not an owner",403);
+            });
     }
 
     @HttpGet("/auth/permissions")

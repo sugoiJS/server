@@ -102,7 +102,7 @@ describe("auth policy check", () => {
         await request(server)
             .get(baseUri+"resource/2")
             .set(sugoiHeader,"34")
-            .expect(200,{valid:false});
+            .expect(403,{ data: [], message: 'not an owner', code: 403 });
 
         await request(server)
             .get(baseUri+"resource/1")
