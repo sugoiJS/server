@@ -7,8 +7,6 @@ export {TStringOrNumber} from "./decorators/authorization-policy.decorator";
 
 export {AuthProvider} from "./classes/auth-provider.class";
 
-export {AuthProviderResolver} from "./decorators/auth-provider-resolver.decorator";
-
 export {ParametersValidatorUtil};
 
 export {AuthorizationUtils};
@@ -18,8 +16,6 @@ export {Authorized} from "./decorators/authorization-policy.decorator";
 export {SchemaTypes, TPolicy, TComparableSchema, Policy, UsePolicy, ComparableSchema} from "@sugoi/core";
 
 export {RequestSchemaPolicy} from "./decorators/request-schema-policy.decorator";
-
-export {ResponseMessage} from "./classes/response-message";
 
 export {ServerModule} from "./decorators/server-module.decorator";
 

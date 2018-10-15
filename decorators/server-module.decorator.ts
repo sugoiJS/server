@@ -6,13 +6,13 @@ import {ModuleMetaKey} from "../constants/meta-key";
  * load by this module
  *
  * @param {IModuleMetadata} metadata
- * @param {string} metaKey
+ * @param {string} namespaceKey
  * @returns {(item: any) => any}
  * @constructor
  */
-const ServerModule = function(metadata?: IModuleMetadata,metaKey:string = ModuleMetaKey) {
+const ServerModule = function(metadata?: IModuleMetadata,namespaceKey:string = ModuleMetaKey) {
     return function (item:any) {
-        Reflect.defineMetadata(metaKey, metadata, item);
+        Reflect.defineMetadata(namespaceKey, metadata, item);
     }
 };
 export {ServerModule};

@@ -1,5 +1,7 @@
 import * as expressUtils from "inversify-express-utils";
 import {
+    HttpResponseMessage,
+    StringContent,
     controller,
     httpMethod,
     httpGet,
@@ -45,6 +47,8 @@ const Controller = controller,
 
 export {
     expressUtils,
+    HttpResponseMessage,
+    StringContent,
     controller,
     httpMethod,
     httpGet,

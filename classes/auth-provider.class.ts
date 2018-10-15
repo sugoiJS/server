@@ -4,7 +4,7 @@ import e = require("express");
 import {TStringOrNumber} from "../decorators/authorization-policy.decorator";
 
 @Injectable()
-export abstract class AuthProvider<T=any> implements interfaces.AuthProvider, interfaces.Principal {
+export abstract class AuthProvider<T=any> implements interfaces.AuthProvider {
     cookies: any;
     headers: any;
     details: any;
@@ -17,7 +17,7 @@ export abstract class AuthProvider<T=any> implements interfaces.AuthProvider, in
 
     abstract isAuthenticated(): Promise<boolean>;
 
-    abstract isResourceOwner(resourceId: any): Promise<boolean>;
+    abstract isResourceOwner(resourceId: any,resourceType?:any,...args:any[]): Promise<boolean>;
 
     abstract getUser(req: e.Request, res: e.Response, next: e.NextFunction): Promise<any>;
 

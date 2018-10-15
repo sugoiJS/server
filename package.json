@@ -51,9 +51,10 @@
     "@types/express": "^4.16.0",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.3.2",
+    "axios": "^0.18.0",
     "jest": "^23.6.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.2",
+    "moxios": "^0.4.0",
+    "supertest": "^3.3.0",
     "ts-jest": "^23.10.1"
   },
   "jest": {

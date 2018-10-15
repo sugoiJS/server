@@ -7,11 +7,19 @@ export class AuthService extends AuthProvider {
     }
 
     isResourceOwner(resourceId: any): Promise<boolean> {
+        console.log(this.headers['x-sug-auth'])
+        console.log(resourceId)
         return Promise.resolve(this.headers['x-sug-auth'] == resourceId);
     }
 
+    resolveUser(req?: e.Request): Promise<any> {
+        return this.getUser(req, null, null);
+    }
+
     getUser(req: e.Request, res: e.Response, next: e.NextFunction): Promise<any> {
-        return Promise.resolve({name: "me"});
+        if (!this.details)
+            this.details = {name: "me"};
+        return Promise.resolve(this.details)
     }
 
     isInRole(...roles: (string | number)[]): Promise<boolean> {

@@ -27,6 +27,7 @@ export class HttpServer {
                 if ((<Container>req.container).isBound(Symbol.for("AuthProvider"))) {
                     const AuthProvider = (<Container>req.container).get<AuthProvider>(Symbol.for("AuthProvider"));
                     req['AuthProvider'] = (<any>AuthProvider.constructor).builder().setRequestData(req);
+                    req.getAuthProvider = (function(){return this.AuthProvider}).bind(req);
                 }
                 next();
             }).bind(this));
@@ -71,8 +72,8 @@ export class HttpServer {
                           module: IModuleMetadata,
                           authProvider: TNewable<AuthProvider>) {
         this.instanceId = StringUtils.generateGuid();
-        ServerContainerService.setContainerForId(this.instanceId);
-        this._container = ServerContainerService.getContainerById(this.instanceId);
+        ServerContainerService.setContainerForId(<string>this.instanceId);
+        this._container = ServerContainerService.getContainerById(<string>this.instanceId);
         this._rootPath = rootPath;
         this.moduleMetaKey = moduleMetaKey;
         this.loadModules(module, this._container);
@@ -83,33 +84,33 @@ export class HttpServer {
 
     public static init(bootstrapModule: any): HttpServer;
     public static init(bootstrapModule: any, rootPath: string): HttpServer;
-    public static init(bootstrapModule: any, rootPath: string, moduleMetaKey?: string): HttpServer;
-    public static init(bootstrapModule: any, rootPath: string, moduleMetaKey?: string, authProvider?: TNewable<AuthProvider>): HttpServer;
+    public static init(bootstrapModule: any, rootPath: string, namespaceKey?: string): HttpServer;
+    public static init(bootstrapModule: any, rootPath: string, namespaceKey?: string, authProvider?: TNewable<AuthProvider>): HttpServer;
 
     /**
      * Initialize the application by creating new httpServer.
      *
      * A bootstrap module (bootstrapModule) should be decorated with SugModule and 'modules' property
      * which contains all of the related modules.
-     * Depended on moduleMetaKey for separate applications.
+     * Depended on namespaceKey for separate applications.
      *
      * @param bootstrapModule - the root module which use as entry point
      * @param {string} rootPath - the prefix for all of the routes
-     * @param {string} moduleMetaKey - related to ServerModule metaKey - Allow to use the right configuration decorator
+     * @param {string} namespaceKey - related to ServerModule metaKey - Allow to use the right configuration decorator
      * @param {TNewable<AuthProvider>} authProvider - Authentication & authorization service which will use for @Authorization and the Inversify express `this.httpContext` & @Principal
      *
      * @returns {HttpServer}
      */
     public static init(bootstrapModule: any,
                        rootPath: string = "/",
-                       moduleMetaKey: string = ModuleMetaKey,
+                       namespaceKey: string = ModuleMetaKey,
                        authProvider: TNewable<AuthProvider> = null): HttpServer {
-        moduleMetaKey = moduleMetaKey || ModuleMetaKey;
-        if (HttpServer.serverInstances.has(moduleMetaKey)) {
-            return HttpServer.serverInstances.get(moduleMetaKey)
+        namespaceKey = namespaceKey || ModuleMetaKey;
+        if (HttpServer.serverInstances.has(namespaceKey)) {
+            return HttpServer.serverInstances.get(namespaceKey)
         } else {
-            const server = new HttpServer(rootPath, moduleMetaKey, bootstrapModule, authProvider);
-            HttpServer.serverInstances.set(moduleMetaKey, server);
+            const server = new HttpServer(rootPath, namespaceKey, bootstrapModule, authProvider);
+            HttpServer.serverInstances.set(namespaceKey, server);
             return server;
         }
 
@@ -122,7 +123,7 @@ export class HttpServer {
      * @param {string} moduleMetaKey
      * @returns {e.Application}
      */
-    public static getInstance(instanceId: number, moduleMetaKey: string = ModuleMetaKey) {
+    public static getInstance(instanceId: number|string, moduleMetaKey: string = ModuleMetaKey) {
         const instance = HttpServer.serverInstances.get(moduleMetaKey);
 
         return instance && instance.httpListeners.has(instanceId)
@@ -173,7 +174,7 @@ export class HttpServer {
      * @param {number|string} instanceId - the key used to store http server instance for later usage
      * @returns {any}
      */
-    public build(instanceId: string | number = this.instanceId) {
+    public build(instanceId: string | number = this.instanceId):HttpServer {
         this.setInstanceId(instanceId);
         const that = this;
         const httpInstance = this.serverInstance
