@@ -16,8 +16,8 @@ export class AuthService extends AuthProvider {
 
     getUser(req: e.Request, res: e.Response, next: e.NextFunction): Promise<any> {
         if (!this.details)
-            this.details = {name: "me"};
-        return Promise.resolve(this.details)
+            this.setUserData({name: "me"});
+        return Promise.resolve(this.getUserData())
     }
 
     isInRole(...roles: (string | number)[]): Promise<boolean> {
