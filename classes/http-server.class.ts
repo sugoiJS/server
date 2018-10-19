@@ -1,4 +1,4 @@
-import {StringUtils, Container, Injectable} from '@sugoi/core';
+import {ContainerModule, AsyncContainerModule, StringUtils, Container} from '@sugoi/core';
 import {InversifyExpressServer} from 'inversify-express-utils';
 import {IExpressCallback} from "../interfaces/express-callback.interface";
 import {IModuleMetadata} from "../interfaces/module-meta.interface";
@@ -8,18 +8,24 @@ import {ModuleMetaKey} from "../constants/meta-key";
 import * as express from "express";
 import {Application} from "express";
 import {AuthProvider} from "./auth-provider.class";
-import {Server} from "http";
 import {SUGOI_ICON} from "../constants/icons";
 import {TNewable} from "../interfaces/newable.type";
 import {ServerContainerService} from "../services/server-container.service";
+import {IServerModule} from "../interfaces/server-module.interface";
+import * as http from "http";
+import * as https from "https";
 
 export class HttpServer {
-    protected _container: Container;
     public get container() {
         return this._container;
     }
 
+    protected _container: Container;
+
+    private _httpsConfiguration: any;
     private static serverInstances: Map<string, HttpServer> = new Map();
+    private _asyncModules: Map<string, Promise<void>> = new Map();
+
     private metaMiddlewares: Array<IExpressCallback> = [
         (function (app) {
             app.use((function (req, res, next) {
@@ -27,7 +33,9 @@ export class HttpServer {
                 if ((<Container>req.container).isBound(Symbol.for("AuthProvider"))) {
                     const AuthProvider = (<Container>req.container).get<AuthProvider>(Symbol.for("AuthProvider"));
                     req['AuthProvider'] = (<any>AuthProvider.constructor).builder().setRequestData(req);
-                    req.getAuthProvider = (function(){return this.AuthProvider}).bind(req);
+                    req.getAuthProvider = (function () {
+                        return this.AuthProvider
+                    }).bind(req);
                 }
                 next();
             }).bind(this));
@@ -41,10 +49,12 @@ export class HttpServer {
     })];
     private moduleMetaKey: string;
     private instanceId: string | number;
-    private _serverInstance: InversifyExpressServer;
+
     public get serverInstance(): InversifyExpressServer {
         return this._serverInstance
     };
+
+    private _serverInstance: InversifyExpressServer;
 
     private httpListeners: Map<string | number, Application> = new Map();
     private _rootPath: string;
@@ -70,11 +80,13 @@ export class HttpServer {
     protected constructor(rootPath: string,
                           moduleMetaKey: string,
                           module: IModuleMetadata,
-                          authProvider: TNewable<AuthProvider>) {
+                          authProvider: TNewable<AuthProvider>,
+                          httpsConfiguration: any) {
         this.instanceId = StringUtils.generateGuid();
         ServerContainerService.setContainerForId(<string>this.instanceId);
         this._container = ServerContainerService.getContainerById(<string>this.instanceId);
         this._rootPath = rootPath;
+        this._httpsConfiguration = httpsConfiguration;
         this.moduleMetaKey = moduleMetaKey;
         this.loadModules(module, this._container);
         this._serverInstance = new InversifyExpressServer(this._container, null, {rootPath}, null, authProvider);
@@ -86,6 +98,7 @@ export class HttpServer {
     public static init(bootstrapModule: any, rootPath: string): HttpServer;
     public static init(bootstrapModule: any, rootPath: string, namespaceKey?: string): HttpServer;
     public static init(bootstrapModule: any, rootPath: string, namespaceKey?: string, authProvider?: TNewable<AuthProvider>): HttpServer;
+    public static init(bootstrapModule: any, rootPath: string, namespaceKey?: string, authProvider?: TNewable<AuthProvider>, httpsConfiguration?: any): HttpServer;
 
     /**
      * Initialize the application by creating new httpServer.
@@ -104,12 +117,13 @@ export class HttpServer {
     public static init(bootstrapModule: any,
                        rootPath: string = "/",
                        namespaceKey: string = ModuleMetaKey,
-                       authProvider: TNewable<AuthProvider> = null): HttpServer {
+                       authProvider: TNewable<AuthProvider> = null,
+                       httpsConfiguration?: any): HttpServer {
         namespaceKey = namespaceKey || ModuleMetaKey;
         if (HttpServer.serverInstances.has(namespaceKey)) {
             return HttpServer.serverInstances.get(namespaceKey)
         } else {
-            const server = new HttpServer(rootPath, namespaceKey, bootstrapModule, authProvider);
+            const server = new HttpServer(rootPath, namespaceKey, bootstrapModule, authProvider, httpsConfiguration);
             HttpServer.serverInstances.set(namespaceKey, server);
             return server;
         }
@@ -123,7 +137,7 @@ export class HttpServer {
      * @param {string} moduleMetaKey
      * @returns {e.Application}
      */
-    public static getInstance(instanceId: number|string, moduleMetaKey: string = ModuleMetaKey) {
+    public static getInstance(instanceId: number | string, moduleMetaKey: string = ModuleMetaKey) {
         const instance = HttpServer.serverInstances.get(moduleMetaKey);
 
         return instance && instance.httpListeners.has(instanceId)
@@ -174,7 +188,7 @@ export class HttpServer {
      * @param {number|string} instanceId - the key used to store http server instance for later usage
      * @returns {any}
      */
-    public build(instanceId: string | number = this.instanceId):HttpServer {
+    public build(instanceId: string | number = this.instanceId): HttpServer {
         this.setInstanceId(instanceId);
         const that = this;
         const httpInstance = this.serverInstance
@@ -191,6 +205,10 @@ export class HttpServer {
         return this;
     }
 
+    public setHttpsConfiguration(httpsConfiguration:any){
+        this._httpsConfiguration = httpsConfiguration;
+    }
+
     /**
      * setting an http server instance based on port number
      * instance store in a map for later use
@@ -205,8 +223,8 @@ export class HttpServer {
     public listen(port: number, hostname: string);
     public listen(port: number, hostname: string, callback: Function);
     public listen(port: number, hostname?: Function | string, callback: Function = (err?) => {
-    }): Server {
-        if(typeof hostname === "function"){
+    }): http.Server | https.Server {
+        if (typeof hostname === "function") {
             callback = hostname;
             hostname = null;
         }
@@ -217,36 +235,80 @@ export class HttpServer {
             return callback(`No server instance found for port ${port}`);
         }
 
-        return server.listen(port, hostname as string, err => {
+        const listener = this._httpsConfiguration
+            ? https.createServer(this._httpsConfiguration, server)
+            : http.createServer(server);
+        this.initListener(listener, port, hostname as string, callback);
+        return listener;
+
+    }
+
+    private async initListener(listener: http.Server | https.Server, port, hostname: string, callback) {
+        if (this._asyncModules.size > 0)
+            console.log("Resolving async modules...");
+        try {
+            await Promise.all(this._asyncModules.values());
+        } catch (err) {
+            return callback(err);
+        }
+        this._asyncModules.clear();
+        listener.listen(port, hostname, err => {
             if (!err) {
                 console.log(SUGOI_ICON);
             }
-            callback(err);
-        })
 
+            callback(err);
+        });
     }
 
     protected loadModules(module: any, container: Container) {
-        new module();
-        const rootModuleMeta = Reflect.getMetadata(this.moduleMetaKey, module) || {};
-        if (Array.isArray(rootModuleMeta.services)) {
-            for (const service of rootModuleMeta.services) {
-                this.registerService(container, service);
-            }
-        }
-        rootModuleMeta.modules = rootModuleMeta.modules || [];
-        for (const mod of rootModuleMeta.modules) {
-            const metadata = Reflect.getMetadata(this.moduleMetaKey, mod);
-            const {services, modules} = metadata;
-            if (Array.isArray(services)) {
-                for (const service of services) {
-                    this.registerService(container, service);
-                }
-            }
-            if (modules)
-                modules.forEach(subModule => this.loadModules(subModule, container));
-        }
+        this.handleModules(module, container)
+            .then(moduleContainers => {
+                // container.load(...moduleContainers.containers);
+                // container.loadAsync(...moduleContainers.asyncContainers);
+            });
     }
+
+    private async handleModules(module, container: Container, containerModulesObjects = {
+        asyncContainers: [],
+        containers: []
+    }): Promise<{ containers: Array<ContainerModule>, asyncContainers: Array<AsyncContainerModule> }> {
+        const moduleMeta: IModuleMetadata = Reflect.getMetadata(this.moduleMetaKey, module) || {};
+        let {services, modules, controllers, dependencies} = moduleMeta;
+        modules = modules || [];
+        if (dependencies) {
+            modules.push.apply(modules, dependencies);
+        }
+        services = Array.isArray(services) ? services : [];
+        //register the module for being singleton
+        this.registerServices(container.bind, container, ...services);
+        if (!container.isBound(module.name)) {
+            await this.loadModule(module, container, modules, containerModulesObjects);
+        } else {
+            await this._asyncModules.get(module.name);
+        }
+        return containerModulesObjects;
+    }
+
+    private async loadModule(module: TNewable<IServerModule>, container: Container, modules: Array<TNewable<IServerModule>>, containerModulesObjects) {
+        const moduleInstance = container.resolve<IServerModule>(module);
+
+        let res = "onLoad" in moduleInstance
+            ? moduleInstance.onLoad()
+            : null;
+        this.registerServices(container.bind, container, module);
+        if (res instanceof Promise) {
+            res = res.then(async (res) => {
+                await modules.map(async subModule => this.handleModules(subModule, container, containerModulesObjects));
+            });
+            this._asyncModules.set(moduleInstance.constructor.name, res)
+        }
+        else {
+            await modules.map(async subModule => this.handleModules(subModule, container, containerModulesObjects));
+        }
+
+    }
+
 
     protected setNamespace(moduleMetaKey: string) {
         this.moduleMetaKey = moduleMetaKey;
@@ -264,17 +326,21 @@ export class HttpServer {
         return this.instanceId;
     }
 
-    private registerService(container: Container, service) {
-        const serviceName = service.name;
-        container.bind(service).to(service).inSingletonScope();
-        service = container.get(service);
-        const insRef = {
-            factory: (function () {
-                return service
-            }).bind(service)
-        };
-        container.bind(serviceName).toFactory(insRef.factory);
-        container.bind(Symbol.for(serviceName)).toFactory(insRef.factory);
+    private registerServices(bind, container, ...services) {
+        for (let service of services) {
+            const serviceName = service.name;
+            if (container.isBound(serviceName))
+                continue;
+            container.bind(service).to(service).inSingletonScope();
+            service = container.get(service);
+            const insRef = {
+                factory: (function () {
+                    return service
+                }).bind(service)
+            };
+            container.bind(serviceName).toFactory(insRef.factory);
+            container.bind(Symbol.for(serviceName)).toFactory(insRef.factory);
+        }
     }
 }
 

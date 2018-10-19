@@ -7,8 +7,6 @@ export class AuthService extends AuthProvider {
     }
 
     isResourceOwner(resourceId: any): Promise<boolean> {
-        console.log(this.headers['x-sug-auth'])
-        console.log(resourceId)
         return Promise.resolve(this.headers['x-sug-auth'] == resourceId);
     }
 

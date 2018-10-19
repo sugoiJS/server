@@ -10,4 +10,9 @@ export class Sub2Controller{
     get(){
         return {success:this.sub1Service.status}
     }
+
+    @HttpGet("/date")
+    getDate(){
+        return {date:this.sub1Service.date};
+    }
 }

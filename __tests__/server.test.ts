@@ -4,6 +4,8 @@ import {Bootstrap} from "./app/app";
 import {Server} from "net";
 import * as path from "path";
 import {SugoiServerError} from "../exceptions/server.exception";
+import {Sub1Service} from "./app/submodule/sub1/sub1.service";
+import {Sub1Module} from "./app/submodule/sub1/sub1.module";
 // import * as rp from "request-promise";
 const moxios = require('moxios');
 const request = require('supertest');
@@ -15,7 +17,7 @@ const responses = {
             "type": "policy",
             "policyId": "SugIsAuthorized",
             "validationResult": {"data": [], "message": "Not authenticated"}
-        }], "message": "Call blocked by resource policy", "code": 400
+        }], "message": "Call blocked by resource policy", "code": 401
     },
     noPermissions: {
         message: 'Call blocked by resource policy',
@@ -72,6 +74,7 @@ describe("basic httpserver logic", () => {
     it("namespace validation", () => {
         expect(HttpServer.init(Bootstrap, "/testing", "test").getNamespace()).toBe("test");
     });
+
 });
 
 describe("schema policy check", () => {
@@ -100,14 +103,19 @@ describe("auth policy check", () => {
     });
     it("#get /auth/id", async () => {
         await request(server)
-            .get(baseUri+"resource/2")
-            .set(sugoiHeader,"34")
-            .expect(403,{ data: [], message: 'not an owner', code: 403 });
+            .get(baseUri + "resource/2")
+            .expect(401, responses.unauthorized);
+
 
         await request(server)
-            .get(baseUri+"resource/1")
-            .set(sugoiHeader,"1")
-            .expect(200,{valid:true});
+            .get(baseUri + "resource/2")
+            .set(sugoiHeader, "34")
+            .expect(403, {data: [], message: 'not an owner', code: 403});
+
+        await request(server)
+            .get(baseUri + "resource/1")
+            .set(sugoiHeader, "1")
+            .expect(200, {valid: true});
     })
 
     it("#get /auth/permissions", async () => {
@@ -147,6 +155,31 @@ describe("sub modules check", () => {
         await request(server)
             .get('/sub1')
             .expect(200, {message: "hello"});
-    })
+    });
+
+    it("validate onLoad logic", async () => {
+        await request(server)
+            .get('/sub2/date')
+            .expect(200, {date: new Date("2018-10-18").toISOString()});
+
+    });
+
+
+    it("validate dependencies logic", async () => {
+        await request(server)
+            .get('/sub3/date')
+            .expect(200, {date: new Date("2018-10-18").toISOString()});
+
+        await request(server)
+            .get('/sub3/date2')
+            .expect(200, {date: new Date("2018-10-19").toISOString()});
+
+    });
+
+    it("validate dependencies onload logic", () => {
+        const sub1Service = httpserver.container.get(Sub1Service);
+        expect(sub1Service.date2).toBeDefined();
+    });
+
 
 });

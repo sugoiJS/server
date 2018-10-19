@@ -1,7 +1,11 @@
+
 export * from "./core-utils";
 
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 import {AuthorizationUtils} from "./utils/authorization.utils";
+
+export {IServerModule} from "./interfaces/server-module.interface";
+
 
 export {TStringOrNumber} from "./decorators/authorization-policy.decorator";
 

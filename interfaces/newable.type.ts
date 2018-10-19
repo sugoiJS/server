@@ -1,1 +1,1 @@
-export type TNewable<T> = new ()=>T;
+export type TNewable<T> = new (...args)=>T;
