@@ -7,7 +7,7 @@ import {Sub3Module} from "./submodule/sub3/sub3.module";
 @ServerModule({
     controllers: [IndexController],
     services: [AuthService],
-    modules: [Sub1Module,Sub3Module]
+    modules: [Sub1Module]
 })
 export class Bootstrap {
 }

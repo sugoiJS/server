@@ -71,10 +71,10 @@ export class HttpServer {
      *
      *
      * @param {string} rootPath
-     * @param {Container} container
      * @param {string} moduleMetaKey
      * @param {IModuleMetadata} module
      * @param {AuthProvider} authProvider
+     * @param {any} httpsConfiguration
      * @constructor
      */
     protected constructor(rootPath: string,
@@ -89,7 +89,7 @@ export class HttpServer {
         this._httpsConfiguration = httpsConfiguration;
         this.moduleMetaKey = moduleMetaKey;
         this.loadModules(module, this._container);
-        this._serverInstance = new InversifyExpressServer(this._container, null, {rootPath}, null, authProvider);
+        this._serverInstance = new InversifyExpressServer(this._container as any, null, {rootPath}, null, authProvider);
 
     }
 
@@ -262,41 +262,41 @@ export class HttpServer {
     }
 
     protected loadModules(module: any, container: Container) {
-        this.handleModules(module, container)
-            .then(moduleContainers => {
-                // container.load(...moduleContainers.containers);
-                // container.loadAsync(...moduleContainers.asyncContainers);
-            });
+        this.handleModules(module, container);
+        // .then(moduleContainers => {
+        // container.load(...moduleContainers.containers);
+        // container.loadAsync(...moduleContainers.asyncContainers);
+        // });
     }
 
     private async handleModules(module, container: Container, containerModulesObjects = {
         asyncContainers: [],
         containers: []
-    }): Promise<{ containers: Array<ContainerModule>, asyncContainers: Array<AsyncContainerModule> }> {
+    }): Promise<any> {
         const moduleMeta: IModuleMetadata = Reflect.getMetadata(this.moduleMetaKey, module) || {};
         let {services, modules, controllers, dependencies} = moduleMeta;
         modules = modules || [];
-        if (dependencies) {
-            modules.push.apply(modules, dependencies);
-        }
+        dependencies = dependencies || [];
         services = Array.isArray(services) ? services : [];
-        //register the module for being singleton
         this.registerServices(container.bind, container, ...services);
         if (!container.isBound(module.name)) {
+
             await this.loadModule(module, container, modules, containerModulesObjects);
-        } else {
-            await this._asyncModules.get(module.name);
         }
-        return containerModulesObjects;
+        else {
+            return await this._asyncModules.get(module.name);
+        }
+
     }
 
     private async loadModule(module: TNewable<IServerModule>, container: Container, modules: Array<TNewable<IServerModule>>, containerModulesObjects) {
+        this.registerServices(container.bind, container, module);
         const moduleInstance = container.resolve<IServerModule>(module);
 
         let res = "onLoad" in moduleInstance
             ? moduleInstance.onLoad()
             : null;
-        this.registerServices(container.bind, container, module);
+        //register the module for being singleton
         if (res instanceof Promise) {
             res = res.then(async (res) => {
                 await modules.map(async subModule => this.handleModules(subModule, container, containerModulesObjects));

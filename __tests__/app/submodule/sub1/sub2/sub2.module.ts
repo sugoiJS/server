@@ -1,9 +1,11 @@
 import {IServerModule,Inject,ServerModule} from "../../../../../index";
 import {Sub2Controller} from "./sub2.controller";
 import {Sub1Service} from "../sub1.service";
+import {Sub3Module} from "../../sub3/sub3.module";
 
 @ServerModule({
-    controllers:[Sub2Controller]
+    controllers:[Sub2Controller],
+    modules: [Sub3Module]
 })
 export class Sub2Module implements IServerModule{
     @Inject("Sub1Service")

@@ -170,16 +170,16 @@ describe("sub modules check", () => {
             .get('/sub3/date')
             .expect(200, {date: new Date("2018-10-18").toISOString()});
 
-        await request(server)
-            .get('/sub3/date2')
-            .expect(200, {date: new Date("2018-10-19").toISOString()});
+        // await request(server)
+        //     .get('/sub3/date2')
+        //     .expect(200, {date: new Date("2018-10-19").toISOString()});
 
     });
 
-    it("validate dependencies onload logic", () => {
-        const sub1Service = httpserver.container.get(Sub1Service);
-        expect(sub1Service.date2).toBeDefined();
-    });
+    // it("validate dependencies onload logic", () => {
+    //     const sub1Service = httpserver.container.get(Sub1Service);
+    //     expect(sub1Service.date2).toBeDefined();
+    // });
 
 
 });

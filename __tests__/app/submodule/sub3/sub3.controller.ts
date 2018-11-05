@@ -12,12 +12,12 @@ export class Sub3Controller{
     }
 
     @HttpGet("/date")
-    getDate(){
+    async getDate(){
         return {date:this.sub1Service.date};
     }
 
     @HttpGet("/date2")
-    getDate2(){
+    async getDate2(){
         return {date:this.sub1Service.date2};
     }
 }

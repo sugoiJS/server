@@ -7,7 +7,7 @@ import {IServerModule} from "../../../../interfaces/server-module.interface";
 
 @ServerModule({
     controllers:[Sub3Controller],
-    dependencies:[Sub1Module,Sub2Module]
+    // dependencies:[Sub1Module,Sub2Module]
 })
 export class Sub3Module implements IServerModule{
     onLoad(): void | Promise<void> {
