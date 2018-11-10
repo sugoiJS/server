@@ -1,8 +1,10 @@
-
 export * from "./core-utils";
+export * from "./responses/index";
 
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 import {AuthorizationUtils} from "./utils/authorization.utils";
+
+export {HttpResponse} from "./classes/http-response.class";
 
 export {IServerModule} from "./interfaces/server-module.interface";
 
@@ -34,9 +36,4 @@ export {HttpServer} from "./classes/http-server.class";
 export {ModuleItem} from "./interfaces/module-item.interface";
 
 export * from "./decorators/express-utils.decorator";
-
-
-
-
-
 

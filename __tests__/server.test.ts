@@ -154,7 +154,7 @@ describe("sub modules check", () => {
     it("#get /sub1", async () => {
         await request(server)
             .get('/sub1')
-            .expect(200, {message: "hello"});
+            .expect(202, {message: "hello"});
     });
 
     it("validate onLoad logic", async () => {
@@ -181,5 +181,50 @@ describe("sub modules check", () => {
     //     expect(sub1Service.date2).toBeDefined();
     // });
 
+
+});
+
+describe("check custom reponses", () => {
+    beforeEach(() => {
+        moxios.install();
+    });
+    afterEach(() => {
+        moxios.uninstall();
+    });
+    it("check forbidden",async () => {
+        await request(server)
+            .get('/sub3/forbidden')
+            .expect(403, "forbidden");
+    });
+
+    it("check unauthorized",async () => {
+        await request(server)
+            .get('/sub3/unauthorized')
+            .expect(401, "unauthorized");
+    });
+
+    it("check ok",async () => {
+        await request(server)
+            .get('/sub3/ok')
+            .expect(200, "ok");
+    });
+
+    it("check servererror",async () => {
+        await request(server)
+            .get('/sub3/servererror')
+            .expect(500, "error");
+    });
+
+    it("check notfound",async () => {
+        await request(server)
+            .get('/sub3/notfound')
+            .expect(404, "not found");
+    });
+
+    it("check bad request",async () => {
+        await request(server)
+            .get('/sub3/badrequest')
+            .expect(400, "bad request");
+    });
 
 });

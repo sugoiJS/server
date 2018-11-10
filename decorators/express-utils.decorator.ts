@@ -2,6 +2,7 @@ import * as expressUtils from "inversify-express-utils";
 import {
     HttpResponseMessage,
     StringContent,
+    JsonContent,
     controller,
     httpMethod,
     httpGet,
@@ -49,6 +50,7 @@ export {
     expressUtils,
     HttpResponseMessage,
     StringContent,
+    JsonContent,
     controller,
     httpMethod,
     httpGet,
