@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1541891366592" clover="3.2.0">
+  <project timestamp="1541891366592" name="All files">
+    <metrics statements="626" coveredstatements="586" conditionals="498" coveredconditionals="322" methods="187" coveredmethods="163" elements="1311" coveredelements="1071" complexity="0" loc="626" ncloc="626" packages="14" files="33" classes="33">
+      <package name="dist">
+        <metrics statements="48" coveredstatements="48" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <file name="core-utils.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\core-utils.js">
+          <metrics statements="20" coveredstatements="20" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="5" count="1" type="stmt"/>
+          <line num="6" count="1" type="stmt"/>
+          <line num="7" count="1" type="stmt"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="16" count="1" type="stmt"/>
+          <line num="17" count="1" type="stmt"/>
+          <line num="18" count="1" type="stmt"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+        </file>
+        <file name="index.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\index.js">
+          <metrics statements="28" coveredstatements="28" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+          <line num="3" count="67" type="cond" truecount="1" falsecount="1"/>
+          <line num="5" count="1" type="stmt"/>
+          <line num="6" count="1" type="stmt"/>
+          <line num="7" count="1" type="stmt"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="16" count="1" type="stmt"/>
+          <line num="17" count="1" type="stmt"/>
+          <line num="18" count="1" type="stmt"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="23" count="1" type="stmt"/>
+          <line num="24" count="1" type="stmt"/>
+          <line num="25" count="1" type="stmt"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="27" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="29" count="1" type="stmt"/>
+          <line num="30" count="1" type="stmt"/>
+          <line num="31" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.__tests__.app">
+        <metrics statements="13" coveredstatements="12" conditionals="22" coveredconditionals="8" methods="1" coveredmethods="1"/>
+        <file name="app.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\app.js">
+          <metrics statements="13" coveredstatements="12" conditionals="22" coveredconditionals="8" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="1" type="cond" truecount="1" falsecount="3"/>
+          <line num="4" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="1" type="cond" truecount="1" falsecount="2"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.__tests__.app.controllers">
+        <metrics statements="36" coveredstatements="35" conditionals="43" coveredconditionals="32" methods="18" coveredmethods="16"/>
+        <file name="index.controller.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\controllers\index.controller.js">
+          <metrics statements="36" coveredstatements="35" conditionals="43" coveredconditionals="32" methods="18" coveredmethods="16"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="7" type="cond" truecount="3" falsecount="1"/>
+          <line num="4" count="7" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="7" type="cond" truecount="3" falsecount="0"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="9" count="18" type="cond" truecount="3" falsecount="1"/>
+          <line num="11" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="12" count="3" type="stmt"/>
+          <line num="14" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="15" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="16" count="1" type="stmt"/>
+          <line num="17" count="1" type="stmt"/>
+          <line num="18" count="3" type="cond" truecount="2" falsecount="0"/>
+          <line num="19" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="24" count="1" type="stmt"/>
+          <line num="25" count="1" type="stmt"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="31" count="2" type="stmt"/>
+          <line num="32" count="2" type="stmt"/>
+          <line num="34" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="35" count="1" type="stmt"/>
+          <line num="37" count="1" type="stmt"/>
+          <line num="43" count="1" type="stmt"/>
+          <line num="47" count="1" type="stmt"/>
+          <line num="50" count="1" type="stmt"/>
+          <line num="51" count="1" type="stmt"/>
+          <line num="59" count="1" type="stmt"/>
+          <line num="67" count="1" type="stmt"/>
+          <line num="74" count="1" type="stmt"/>
+          <line num="81" count="1" type="stmt"/>
+          <line num="88" count="1" type="stmt"/>
+          <line num="95" count="1" type="stmt"/>
+          <line num="99" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.__tests__.app.services">
+        <metrics statements="13" coveredstatements="12" conditionals="2" coveredconditionals="1" methods="10" coveredmethods="9"/>
+        <file name="auth.service.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\services\auth.service.js">
+          <metrics statements="13" coveredstatements="12" conditionals="2" coveredconditionals="1" methods="10" coveredmethods="9"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="6" count="12" type="stmt"/>
+          <line num="9" count="2" type="stmt"/>
+          <line num="12" count="0" type="stmt"/>
+          <line num="15" count="34" type="cond" truecount="1" falsecount="1"/>
+          <line num="16" count="34" type="stmt"/>
+          <line num="17" count="34" type="stmt"/>
+          <line num="20" count="2" type="stmt"/>
+          <line num="21" count="3" type="stmt"/>
+          <line num="25" count="2" type="stmt"/>
+          <line num="26" count="3" type="stmt"/>
+          <line num="30" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.__tests__.app.submodule.sub1">
+        <metrics statements="62" coveredstatements="55" conditionals="95" coveredconditionals="51" methods="21" coveredmethods="17"/>
+        <file name="sub1.controller.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\submodule\sub1\sub1.controller.js">
+          <metrics statements="25" coveredstatements="22" conditionals="38" coveredconditionals="27" methods="11" coveredmethods="8"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="3" type="cond" truecount="4" falsecount="0"/>
+          <line num="4" count="3" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="3" type="cond" truecount="3" falsecount="0"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="9" count="5" type="cond" truecount="3" falsecount="1"/>
+          <line num="11" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="12" count="1" type="cond" truecount="2" falsecount="0"/>
+          <line num="13" count="0" type="stmt"/>
+          <line num="14" count="0" type="stmt"/>
+          <line num="15" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="16" count="1" type="cond" truecount="2" falsecount="0"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="23" count="1" type="stmt"/>
+          <line num="24" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="29" count="1" type="stmt"/>
+          <line num="38" count="1" type="stmt"/>
+          <line num="42" count="1" type="stmt"/>
+          <line num="48" count="1" type="stmt"/>
+          <line num="52" count="1" type="stmt"/>
+        </file>
+        <file name="sub1.module.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\submodule\sub1\sub1.module.js">
+          <metrics statements="20" coveredstatements="19" conditionals="29" coveredconditionals="14" methods="6" coveredmethods="6"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="1" type="cond" truecount="1" falsecount="3"/>
+          <line num="4" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="1" type="cond" truecount="1" falsecount="2"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="9" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="16" count="1" type="stmt"/>
+          <line num="18" count="2" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="23" count="1" type="stmt"/>
+          <line num="24" count="1" type="stmt"/>
+          <line num="29" count="1" type="stmt"/>
+          <line num="37" count="1" type="stmt"/>
+        </file>
+        <file name="sub1.service.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\submodule\sub1\sub1.service.js">
+          <metrics statements="17" coveredstatements="14" conditionals="28" coveredconditionals="10" methods="4" coveredmethods="3"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="1" type="cond" truecount="1" falsecount="3"/>
+          <line num="4" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="1" type="cond" truecount="1" falsecount="2"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="17" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="18" count="1" type="stmt"/>
+          <line num="21" count="0" type="cond" truecount="0" falsecount="2"/>
+          <line num="22" count="0" type="stmt"/>
+          <line num="25" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.__tests__.app.submodule.sub1.sub2">
+        <metrics statements="39" coveredstatements="33" conditionals="58" coveredconditionals="36" methods="11" coveredmethods="8"/>
+        <file name="sub2.controller.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\submodule\sub1\sub2\sub2.controller.js">
+          <metrics statements="18" coveredstatements="16" conditionals="29" coveredconditionals="19" methods="4" coveredmethods="3"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="4" type="cond" truecount="4" falsecount="0"/>
+          <line num="4" count="4" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="4" type="cond" truecount="3" falsecount="0"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="9" count="7" type="cond" truecount="3" falsecount="1"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="16" count="0" type="stmt"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="32" count="1" type="stmt"/>
+          <line num="38" count="1" type="stmt"/>
+          <line num="41" count="1" type="stmt"/>
+        </file>
+        <file name="sub2.module.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\submodule\sub1\sub2\sub2.module.js">
+          <metrics statements="21" coveredstatements="17" conditionals="29" coveredconditionals="17" methods="7" coveredmethods="5"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="2" type="cond" truecount="3" falsecount="1"/>
+          <line num="4" count="2" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="2" type="cond" truecount="2" falsecount="1"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="9" count="2" type="cond" truecount="3" falsecount="1"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="16" count="1" type="stmt"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="0" type="stmt"/>
+          <line num="23" count="0" type="stmt"/>
+          <line num="28" count="0" type="stmt"/>
+          <line num="31" count="1" type="stmt"/>
+          <line num="35" count="1" type="stmt"/>
+          <line num="42" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.__tests__.app.submodule.sub3">
+        <metrics statements="59" coveredstatements="53" conditionals="67" coveredconditionals="44" methods="27" coveredmethods="21"/>
+        <file name="sub3.controller.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\submodule\sub3\sub3.controller.js">
+          <metrics statements="43" coveredstatements="39" conditionals="38" coveredconditionals="27" methods="23" coveredmethods="19"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="10" type="cond" truecount="4" falsecount="0"/>
+          <line num="4" count="10" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="10" type="cond" truecount="3" falsecount="0"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="9" count="25" type="cond" truecount="3" falsecount="1"/>
+          <line num="11" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="12" count="7" type="cond" truecount="2" falsecount="0"/>
+          <line num="13" count="0" type="stmt"/>
+          <line num="14" count="0" type="stmt"/>
+          <line num="15" count="7" type="cond" truecount="1" falsecount="1"/>
+          <line num="16" count="7" type="cond" truecount="2" falsecount="0"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="24" count="0" type="stmt"/>
+          <line num="27" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="36" count="1" type="stmt"/>
+          <line num="37" count="1" type="stmt"/>
+          <line num="41" count="1" type="stmt"/>
+          <line num="42" count="1" type="stmt"/>
+          <line num="46" count="1" type="stmt"/>
+          <line num="47" count="1" type="stmt"/>
+          <line num="51" count="1" type="stmt"/>
+          <line num="52" count="1" type="stmt"/>
+          <line num="56" count="1" type="stmt"/>
+          <line num="57" count="1" type="stmt"/>
+          <line num="61" count="1" type="stmt"/>
+          <line num="62" count="1" type="stmt"/>
+          <line num="66" count="1" type="stmt"/>
+          <line num="70" count="1" type="stmt"/>
+          <line num="76" count="1" type="stmt"/>
+          <line num="82" count="1" type="stmt"/>
+          <line num="88" count="1" type="stmt"/>
+          <line num="94" count="1" type="stmt"/>
+          <line num="100" count="1" type="stmt"/>
+          <line num="106" count="1" type="stmt"/>
+          <line num="112" count="1" type="stmt"/>
+          <line num="118" count="1" type="stmt"/>
+          <line num="121" count="1" type="stmt"/>
+        </file>
+        <file name="sub3.module.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\__tests__\app\submodule\sub3\sub3.module.js">
+          <metrics statements="16" coveredstatements="14" conditionals="29" coveredconditionals="17" methods="4" coveredmethods="2"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="2" type="cond" truecount="3" falsecount="1"/>
+          <line num="4" count="2" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="2" type="cond" truecount="2" falsecount="1"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="9" count="2" type="cond" truecount="3" falsecount="1"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="19" count="0" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="32" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.classes">
+        <metrics statements="165" coveredstatements="153" conditionals="86" coveredconditionals="56" methods="64" coveredmethods="57"/>
+        <file name="auth-provider.class.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\classes\auth-provider.class.js">
+          <metrics statements="16" coveredstatements="15" conditionals="22" coveredconditionals="8" methods="5" coveredmethods="5"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="1" type="cond" truecount="1" falsecount="3"/>
+          <line num="4" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="1" type="cond" truecount="1" falsecount="2"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="12" count="17" type="stmt"/>
+          <line num="13" count="17" type="stmt"/>
+          <line num="14" count="17" type="stmt"/>
+          <line num="17" count="34" type="stmt"/>
+          <line num="20" count="34" type="stmt"/>
+          <line num="23" count="17" type="stmt"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="29" count="1" type="stmt"/>
+        </file>
+        <file name="http-response.class.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\classes\http-response.class.js">
+          <metrics statements="25" coveredstatements="24" conditionals="8" coveredconditionals="6" methods="8" coveredmethods="8"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="6" count="7" type="stmt"/>
+          <line num="7" count="7" type="stmt"/>
+          <line num="8" count="7" type="stmt"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="15" count="7" type="cond" truecount="2" falsecount="0"/>
+          <line num="16" count="7" type="cond" truecount="2" falsecount="1"/>
+          <line num="18" count="6" type="stmt"/>
+          <line num="19" count="6" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="24" count="0" type="stmt"/>
+          <line num="26" count="7" type="stmt"/>
+          <line num="29" count="1" type="stmt"/>
+          <line num="30" count="1" type="stmt"/>
+          <line num="33" count="8" type="stmt"/>
+          <line num="34" count="8" type="stmt"/>
+          <line num="37" count="1" type="stmt"/>
+          <line num="38" count="1" type="stmt"/>
+          <line num="41" count="1" type="stmt"/>
+          <line num="42" count="1" type="stmt"/>
+          <line num="52" count="7" type="stmt"/>
+          <line num="55" count="1" type="stmt"/>
+        </file>
+        <file name="http-server.class.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\classes\http-server.class.js">
+          <metrics statements="124" coveredstatements="114" conditionals="56" coveredconditionals="42" methods="51" coveredmethods="44"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="12" type="cond" truecount="2" falsecount="0"/>
+          <line num="4" count="8" type="stmt"/>
+          <line num="5" count="0" type="stmt"/>
+          <line num="6" count="20" type="cond" truecount="2" falsecount="0"/>
+          <line num="7" count="12" type="cond" truecount="2" falsecount="0"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="16" count="1" type="stmt"/>
+          <line num="17" count="1" type="stmt"/>
+          <line num="18" count="1" type="stmt"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="33" count="2" type="stmt"/>
+          <line num="34" count="2" type="stmt"/>
+          <line num="36" count="1" type="stmt"/>
+          <line num="37" count="17" type="stmt"/>
+          <line num="38" count="17" type="cond" truecount="1" falsecount="1"/>
+          <line num="39" count="17" type="stmt"/>
+          <line num="40" count="17" type="stmt"/>
+          <line num="41" count="17" type="stmt"/>
+          <line num="42" count="2" type="stmt"/>
+          <line num="45" count="17" type="stmt"/>
+          <line num="49" count="2" type="stmt"/>
+          <line num="50" count="2" type="stmt"/>
+          <line num="51" count="2" type="stmt"/>
+          <line num="52" count="0" type="stmt"/>
+          <line num="54" count="2" type="stmt"/>
+          <line num="55" count="2" type="stmt"/>
+          <line num="56" count="2" type="stmt"/>
+          <line num="57" count="2" type="stmt"/>
+          <line num="58" count="2" type="stmt"/>
+          <line num="59" count="2" type="stmt"/>
+          <line num="60" count="2" type="stmt"/>
+          <line num="61" count="2" type="stmt"/>
+          <line num="62" count="2" type="stmt"/>
+          <line num="65" count="17" type="stmt"/>
+          <line num="68" count="1" type="stmt"/>
+          <line num="76" count="0" type="stmt"/>
+          <line num="94" count="2" type="cond" truecount="2" falsecount="0"/>
+          <line num="95" count="2" type="cond" truecount="1" falsecount="1"/>
+          <line num="96" count="0" type="stmt"/>
+          <line num="99" count="2" type="stmt"/>
+          <line num="100" count="2" type="stmt"/>
+          <line num="101" count="2" type="stmt"/>
+          <line num="112" count="1" type="stmt"/>
+          <line num="113" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="124" count="1" type="stmt"/>
+          <line num="125" count="1" type="stmt"/>
+          <line num="134" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="137" count="1" type="stmt"/>
+          <line num="138" count="1" type="stmt"/>
+          <line num="147" count="1" type="stmt"/>
+          <line num="148" count="1" type="stmt"/>
+          <line num="158" count="1" type="stmt"/>
+          <line num="159" count="1" type="stmt"/>
+          <line num="160" count="1" type="stmt"/>
+          <line num="162" count="1" type="stmt"/>
+          <line num="163" count="1" type="stmt"/>
+          <line num="164" count="1" type="stmt"/>
+          <line num="167" count="1" type="stmt"/>
+          <line num="170" count="1" type="stmt"/>
+          <line num="171" count="1" type="stmt"/>
+          <line num="174" count="0" type="stmt"/>
+          <line num="178" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="179" count="1" type="stmt"/>
+          <line num="180" count="1" type="stmt"/>
+          <line num="182" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="185" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="186" count="0" type="stmt"/>
+          <line num="188" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="191" count="1" type="stmt"/>
+          <line num="192" count="1" type="stmt"/>
+          <line num="195" count="1" type="stmt"/>
+          <line num="196" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="197" count="1" type="stmt"/>
+          <line num="198" count="1" type="stmt"/>
+          <line num="199" count="1" type="stmt"/>
+          <line num="202" count="0" type="stmt"/>
+          <line num="204" count="1" type="stmt"/>
+          <line num="205" count="1" type="stmt"/>
+          <line num="206" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="207" count="1" type="stmt"/>
+          <line num="209" count="1" type="stmt"/>
+          <line num="214" count="2" type="stmt"/>
+          <line num="224" count="4" type="stmt"/>
+          <line num="225" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="226" count="4" type="stmt"/>
+          <line num="227" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="228" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="229" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="230" count="4" type="stmt"/>
+          <line num="231" count="4" type="cond" truecount="1" falsecount="1"/>
+          <line num="232" count="4" type="stmt"/>
+          <line num="235" count="0" type="stmt"/>
+          <line num="240" count="4" type="stmt"/>
+          <line num="241" count="4" type="stmt"/>
+          <line num="242" count="4" type="stmt"/>
+          <line num="243" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="247" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="248" count="2" type="stmt"/>
+          <line num="249" count="1" type="stmt"/>
+          <line num="251" count="2" type="stmt"/>
+          <line num="254" count="2" type="stmt"/>
+          <line num="259" count="0" type="stmt"/>
+          <line num="262" count="1" type="stmt"/>
+          <line num="265" count="1" type="stmt"/>
+          <line num="268" count="1" type="stmt"/>
+          <line num="271" count="8" type="stmt"/>
+          <line num="272" count="6" type="stmt"/>
+          <line num="273" count="6" type="cond" truecount="1" falsecount="1"/>
+          <line num="274" count="0" type="stmt"/>
+          <line num="275" count="6" type="stmt"/>
+          <line num="276" count="6" type="stmt"/>
+          <line num="277" count="6" type="stmt"/>
+          <line num="279" count="14" type="stmt"/>
+          <line num="282" count="6" type="stmt"/>
+          <line num="283" count="6" type="stmt"/>
+          <line num="287" count="1" type="stmt"/>
+          <line num="288" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.constants">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <file name="exceptions.constant.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\constants\exceptions.constant.js">
+          <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+        </file>
+        <file name="icons.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\constants\icons.js">
+          <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+        </file>
+        <file name="meta-key.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\constants\meta-key.js">
+          <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.decorators">
+        <metrics statements="63" coveredstatements="63" conditionals="8" coveredconditionals="7" methods="4" coveredmethods="4"/>
+        <file name="authorization-policy.decorator.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\decorators\authorization-policy.decorator.js">
+          <metrics statements="4" coveredstatements="4" conditionals="3" coveredconditionals="3" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="5" count="5" type="stmt"/>
+        </file>
+        <file name="express-utils.decorator.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\decorators\express-utils.decorator.js">
+          <metrics statements="47" coveredstatements="47" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="5" count="1" type="stmt"/>
+          <line num="6" count="1" type="stmt"/>
+          <line num="7" count="1" type="stmt"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="16" count="1" type="stmt"/>
+          <line num="17" count="1" type="stmt"/>
+          <line num="18" count="1" type="stmt"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="23" count="1" type="stmt"/>
+          <line num="24" count="1" type="stmt"/>
+          <line num="25" count="1" type="stmt"/>
+          <line num="26" count="1" type="stmt"/>
+          <line num="27" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="29" count="1" type="stmt"/>
+          <line num="30" count="1" type="stmt"/>
+          <line num="31" count="1" type="stmt"/>
+          <line num="32" count="1" type="stmt"/>
+          <line num="33" count="1" type="stmt"/>
+          <line num="34" count="1" type="stmt"/>
+          <line num="35" count="1" type="stmt"/>
+          <line num="36" count="1" type="stmt"/>
+          <line num="37" count="1" type="stmt"/>
+          <line num="38" count="1" type="stmt"/>
+          <line num="39" count="1" type="stmt"/>
+          <line num="40" count="1" type="stmt"/>
+          <line num="41" count="1" type="stmt"/>
+          <line num="42" count="1" type="stmt"/>
+          <line num="43" count="1" type="stmt"/>
+          <line num="44" count="1" type="stmt"/>
+          <line num="45" count="1" type="stmt"/>
+          <line num="46" count="1" type="stmt"/>
+          <line num="47" count="1" type="stmt"/>
+          <line num="48" count="1" type="stmt"/>
+        </file>
+        <file name="request-schema-policy.decorator.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\decorators\request-schema-policy.decorator.js">
+          <metrics statements="4" coveredstatements="4" conditionals="4" coveredconditionals="3" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="1" type="stmt"/>
+        </file>
+        <file name="server-module.decorator.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\decorators\server-module.decorator.js">
+          <metrics statements="8" coveredstatements="8" conditionals="1" coveredconditionals="1" methods="2" coveredmethods="2"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="14" count="1" type="cond" truecount="1" falsecount="0"/>
+          <line num="15" count="4" type="stmt"/>
+          <line num="16" count="4" type="stmt"/>
+          <line num="17" count="4" type="stmt"/>
+          <line num="20" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.exceptions">
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <file name="server.exception.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\exceptions\server.exception.js">
+          <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.responses">
+        <metrics statements="37" coveredstatements="37" conditionals="6" coveredconditionals="6" methods="6" coveredmethods="6"/>
+        <file name="bad-request.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\responses\bad-request.js">
+          <metrics statements="4" coveredstatements="4" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="cond" truecount="1" falsecount="0"/>
+          <line num="5" count="1" type="stmt"/>
+        </file>
+        <file name="forbidden.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\responses\forbidden.js">
+          <metrics statements="4" coveredstatements="4" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="cond" truecount="1" falsecount="0"/>
+          <line num="5" count="1" type="stmt"/>
+        </file>
+        <file name="index.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\responses\index.js">
+          <metrics statements="13" coveredstatements="13" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="stmt"/>
+          <line num="5" count="1" type="stmt"/>
+          <line num="6" count="1" type="stmt"/>
+          <line num="7" count="1" type="stmt"/>
+          <line num="8" count="1" type="stmt"/>
+          <line num="9" count="1" type="stmt"/>
+          <line num="10" count="1" type="stmt"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
+          <line num="14" count="1" type="stmt"/>
+        </file>
+        <file name="not-found.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\responses\not-found.js">
+          <metrics statements="4" coveredstatements="4" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="cond" truecount="1" falsecount="0"/>
+          <line num="5" count="1" type="stmt"/>
+        </file>
+        <file name="ok.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\responses\ok.js">
+          <metrics statements="4" coveredstatements="4" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="cond" truecount="1" falsecount="0"/>
+          <line num="5" count="1" type="stmt"/>
+        </file>
+        <file name="server-error.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\responses\server-error.js">
+          <metrics statements="4" coveredstatements="4" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="cond" truecount="1" falsecount="0"/>
+          <line num="5" count="1" type="stmt"/>
+        </file>
+        <file name="unauthorized.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\responses\unauthorized.js">
+          <metrics statements="4" coveredstatements="4" conditionals="1" coveredconditionals="1" methods="1" coveredmethods="1"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="4" count="1" type="cond" truecount="1" falsecount="0"/>
+          <line num="5" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.services">
+        <metrics statements="9" coveredstatements="9" conditionals="1" coveredconditionals="1" methods="3" coveredmethods="3"/>
+        <file name="server-container.service.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\services\server-container.service.js">
+          <metrics statements="9" coveredstatements="9" conditionals="1" coveredconditionals="1" methods="3" coveredmethods="3"/>
+          <line num="2" count="1" type="stmt"/>
+          <line num="3" count="1" type="stmt"/>
+          <line num="6" count="3" type="stmt"/>
+          <line num="9" count="2" type="stmt"/>
+          <line num="10" count="2" type="stmt"/>
+          <line num="13" count="2" type="stmt"/>
+          <line num="16" count="1" type="stmt"/>
+          <line num="17" count="1" type="stmt"/>
+          <line num="18" count="1" type="stmt"/>
+        </file>
+      </package>
+      <package name="dist.utils">
+        <metrics statements="71" coveredstatements="65" conditionals="108" coveredconditionals="79" methods="20" coveredmethods="19"/>
+        <file name="authorization.utils.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\utils\authorization.utils.js">
+          <metrics statements="50" coveredstatements="45" conditionals="72" coveredconditionals="56" methods="14" coveredmethods="13"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="1" type="cond" truecount="2" falsecount="2"/>
+          <line num="4" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="9" count="3" type="cond" truecount="3" falsecount="1"/>
+          <line num="11" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="12" count="12" type="cond" truecount="2" falsecount="0"/>
+          <line num="13" count="12" type="stmt"/>
+          <line num="14" count="0" type="stmt"/>
+          <line num="15" count="24" type="cond" truecount="2" falsecount="0"/>
+          <line num="16" count="12" type="cond" truecount="2" falsecount="0"/>
+          <line num="19" count="1" type="stmt"/>
+          <line num="20" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="23" count="1" type="stmt"/>
+          <line num="26" count="12" type="stmt"/>
+          <line num="27" count="12" type="stmt"/>
+          <line num="31" count="12" type="cond" truecount="1" falsecount="1"/>
+          <line num="33" count="12" type="cond" truecount="1" falsecount="1"/>
+          <line num="34" count="12" type="stmt"/>
+          <line num="36" count="12" type="cond" truecount="3" falsecount="1"/>
+          <line num="37" count="0" type="stmt"/>
+          <line num="38" count="12" type="stmt"/>
+          <line num="39" count="12" type="stmt"/>
+          <line num="41" count="12" type="cond" truecount="2" falsecount="0"/>
+          <line num="42" count="1" type="stmt"/>
+          <line num="43" count="11" type="cond" truecount="4" falsecount="0"/>
+          <line num="44" count="1" type="stmt"/>
+          <line num="45" count="11" type="stmt"/>
+          <line num="46" count="11" type="cond" truecount="4" falsecount="0"/>
+          <line num="51" count="11" type="cond" truecount="2" falsecount="0"/>
+          <line num="52" count="1" type="stmt"/>
+          <line num="53" count="10" type="cond" truecount="4" falsecount="0"/>
+          <line num="54" count="1" type="stmt"/>
+          <line num="55" count="10" type="stmt"/>
+          <line num="56" count="10" type="cond" truecount="4" falsecount="0"/>
+          <line num="60" count="10" type="cond" truecount="2" falsecount="0"/>
+          <line num="61" count="1" type="stmt"/>
+          <line num="63" count="9" type="stmt"/>
+          <line num="66" count="3" type="cond" truecount="3" falsecount="1"/>
+          <line num="67" count="3" type="stmt"/>
+          <line num="68" count="3" type="stmt"/>
+          <line num="69" count="3" type="stmt"/>
+          <line num="72" count="0" type="stmt"/>
+          <line num="73" count="0" type="stmt"/>
+          <line num="79" count="1" type="stmt"/>
+          <line num="85" count="1" type="stmt"/>
+        </file>
+        <file name="parameters-validator.util.js" path="C:\Users\Orel Balilti\Documents\Projects\Sugoi\server\dist\utils\parameters-validator.util.js">
+          <metrics statements="21" coveredstatements="20" conditionals="36" coveredconditionals="23" methods="6" coveredmethods="6"/>
+          <line num="2" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="3" count="1" type="cond" truecount="2" falsecount="2"/>
+          <line num="4" count="1" type="cond" truecount="3" falsecount="1"/>
+          <line num="5" count="0" type="cond" truecount="0" falsecount="8"/>
+          <line num="6" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="8" count="1" type="cond" truecount="3" falsecount="0"/>
+          <line num="9" count="3" type="cond" truecount="3" falsecount="1"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="12" count="1" type="stmt"/>
+          <line num="15" count="1" type="stmt"/>
+          <line num="16" count="1" type="stmt"/>
+          <line num="17" count="1" type="stmt"/>
+          <line num="18" count="1" type="stmt"/>
+          <line num="19" count="4" type="cond" truecount="2" falsecount="0"/>
+          <line num="20" count="3" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
+          <line num="22" count="1" type="stmt"/>
+          <line num="24" count="1" type="cond" truecount="1" falsecount="1"/>
+          <line num="27" count="15" type="cond" truecount="3" falsecount="0"/>
+          <line num="30" count="1" type="stmt"/>
+          <line num="36" count="1" type="stmt"/>
+        </file>
+      </package>
+    </metrics>
+  </project>
+</coverage>
