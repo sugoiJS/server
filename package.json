@@ -43,14 +43,14 @@
   "author": "Orel Balilti",
   "license": "MIT",
   "dependencies": {
-    "@sugoi/core": "^3.1.0",
+    "@sugoi/core": "^3.1.2",
     "express": "^4.16.4",
     "inversify-express-utils": "^6.2.0"
   },
   "devDependencies": {
     "@types/express": "^4.16.0",
     "@types/jest": "^23.3.9",
-    "@types/node": "^10.12.2",
+    "@types/node": "^10.12.9",
     "axios": "^0.18.0",
     "jest": "^23.6.0",
     "moxios": "^0.4.0",

@@ -31,7 +31,7 @@ Under your tsconfig - compilerOptions set:
 - `"lib": ["es2015","dom"]`
 
 
-#### Template
+#### TSConfig Template
 
 You are able to use the config template which was set for the @sugoi/demo application:
 
@@ -77,13 +77,32 @@ when boostrapModule is the entry point module
 ### Build & listen
 After setting the middlewares and error handlers, build and listen to requests by:
 
-    (<HttpServer>server).build()
-        .listen(PORT, (error: Error) => {
-            if (error) {
-                logger.error(error.message);
-                throw error;
-            }
-            logger.debug(`Server running @ ${HOST}:${PORT}`);
+    server//HttpServer instance
+        .setStatic("assets")
+        .setMiddlewares((app) => {
+            app.use(bodyParser.json());
+            app.use(compression());
+        })
+        .setErrorHandlers((app) => {
+            app.use(function (req, res, next) {
+                return res.sendFile(path.resolve(paths.index))
+            });
+            app.use((req,res,next)=>{
+                return function(err){
+                    if(err instanceof SugoiServerError){
+                        console.log.error(err.stack);
+                        console.log.error(`${err.message} ${JSON.stringify(err.data)});
+                        res.status(500).send("Internal error");
+                    }
+                }
+            });
+        })
+		.listen(PORT, (error: Error) => {
+		            if (error) {
+		                logger.error(error.message);
+		                throw error;
+		            }
+		            logger.debug(`Server running @ ${HOST}:${PORT}`);
         });
 
 This call will return http.Server instance which can be use for setting app variables, socket server and more.
@@ -92,7 +111,6 @@ This call will return http.Server instance which can be use for setting app vari
 Creating a module requires you to should use the @ServerModule decorator
 
     import {ServerModule} from "@sugoi/server"
-
     @ServerModule({
         controllers:[CoreController],
         services: [CoreService],
@@ -142,7 +160,7 @@ For setting class as service the class must be decorated with `@Injectable` deco
 
 later we will be able to inject the service instance by:
 
-#### Variable binding
+### Variable binding
 
  - `@Inject(MyService) private myService:MyService`
 
@@ -189,12 +207,6 @@ Full example:
         .setMiddlewares((app) => {
             app.use(bodyParser.json());
             app.use(compression());
-            if (DEVELOPMENT) {
-                app.set('json spaces', 2);
-                app.use(cors());
-                app.use(require('morgan')('dev'));
-            }
-            app.use(express.static(paths.static));
         })
         .setErrorHandlers((app) => {
             app.use(function (req, res, next) {
@@ -254,7 +266,9 @@ Example:
     }
     
     
-### Authorized
+### Authorization
+
+#### Authorized
     /**
      *  requiredRole: TStringOrNumber|TStringOrNumber[] - The required role(s)
      *  permissions: TStringOrNumber|TStringOrNumber[]  - The required premission(s)
