@@ -1,4 +1,5 @@
-import {ContainerModule, AsyncContainerModule, StringUtils, Container} from '@sugoi/core';
+import '@sugoi/core';
+import {Container} from '@sugoi/core';
 import {InversifyExpressServer} from 'inversify-express-utils';
 import {IExpressCallback} from "../interfaces/express-callback.interface";
 import {IModuleMetadata} from "../interfaces/module-meta.interface";
@@ -6,7 +7,6 @@ import {SugoiServerError} from "../exceptions/server.exception";
 import {EXCEPTIONS} from "../constants/exceptions.constant";
 import {ModuleMetaKey} from "../constants/meta-key";
 import * as express from "express";
-import {Application} from "express";
 import {AuthProvider} from "./auth-provider.class";
 import {SUGOI_ICON} from "../constants/icons";
 import {TNewable} from "../interfaces/newable.type";
@@ -16,6 +16,9 @@ import * as http from "http";
 import * as https from "https";
 
 export class HttpServer {
+    private static readonly ID_PREFIX = "SUG_SERVER";
+    private static INCREMENTAL_ID = 1;
+
     public get container() {
         return this._container;
     }
@@ -23,9 +26,9 @@ export class HttpServer {
     protected _container: Container;
 
     private _httpsConfiguration: any;
+
     private static serverInstances: Map<string, HttpServer> = new Map();
     private _asyncModules: Map<string, Promise<void>> = new Map();
-
     private metaMiddlewares: Array<IExpressCallback> = [
         (function (app) {
             app.use((function (req, res, next) {
@@ -42,11 +45,13 @@ export class HttpServer {
         }).bind(this),
 
     ];
+
     private middlewares: Array<IExpressCallback> = [];
     private viewMiddleware: Array<IExpressCallback> = [];
     private handlers: Array<IExpressCallback> = [(app) => app.use(function (err) {
         throw new SugoiServerError(EXCEPTIONS.GENERAL_SERVER_ERROR.message, EXCEPTIONS.GENERAL_SERVER_ERROR.code, err)
     })];
+    private listenerInstance: TServer;
     private moduleMetaKey: string;
     private instanceId: string | number;
 
@@ -56,7 +61,7 @@ export class HttpServer {
 
     private _serverInstance: InversifyExpressServer;
 
-    private httpListeners: Map<string | number, Application> = new Map();
+    private httpListeners: Map<string | number, express.Application> = new Map();
     private _rootPath: string;
     /**
      * rootPath stands for the server uri prefix
@@ -70,26 +75,35 @@ export class HttpServer {
     /**
      *
      *
-     * @param {string} rootPath
+     * @param {string|express.Application} existingApplication
      * @param {string} moduleMetaKey
      * @param {IModuleMetadata} module
      * @param {AuthProvider} authProvider
      * @param {any} httpsConfiguration
      * @constructor
      */
-    protected constructor(rootPath: string,
+    protected constructor(existingApplication: TServer, moduleMetaKey: string, module: IModuleMetadata, authProvider: TNewable<AuthProvider>, httpsConfiguration: any)
+    protected constructor(rootPath: string, moduleMetaKey: string, module: IModuleMetadata, authProvider: TNewable<AuthProvider>, httpsConfiguration: any)
+    protected constructor(rootPath: string | TServer,
                           moduleMetaKey: string,
                           module: IModuleMetadata,
                           authProvider: TNewable<AuthProvider>,
                           httpsConfiguration: any) {
-        this.instanceId = StringUtils.generateGuid();
-        ServerContainerService.setContainerForId(<string>this.instanceId);
-        this._container = ServerContainerService.getContainerById(<string>this.instanceId);
-        this._rootPath = rootPath;
+        this.instanceId = `${HttpServer.ID_PREFIX}_${HttpServer.INCREMENTAL_ID++}`;
+        this._container = ServerContainerService.setContainerForId(this.instanceId);
+        if (typeof rootPath === "string") {
+            this._rootPath = rootPath;
+        } else {
+            this.listenerInstance = rootPath;
+        }
         this._httpsConfiguration = httpsConfiguration;
         this.moduleMetaKey = moduleMetaKey;
         this.loadModules(module, this._container);
-        this._serverInstance = new InversifyExpressServer(this._container as any, null, {rootPath}, null, authProvider);
+        if (!this.listenerInstance) {
+            this._serverInstance = new InversifyExpressServer(this._container as any, null, {rootPath: rootPath as string}, null, authProvider);
+        } else {
+            this._serverInstance = new InversifyExpressServer(this._container as any, null, null, rootPath as express.Application, authProvider);
+        }
 
     }
 
@@ -111,6 +125,7 @@ export class HttpServer {
      * @param {string} rootPath - the prefix for all of the routes
      * @param {string} namespaceKey - related to ServerModule metaKey - Allow to use the right configuration decorator
      * @param {TNewable<AuthProvider>} authProvider - Authentication & authorization service which will use for @Authorization and the Inversify express `this.httpContext` & @Principal
+     * @param {any} httpsConfiguration - configuration for setting an https server
      *
      * @returns {HttpServer}
      */
@@ -124,6 +139,21 @@ export class HttpServer {
             return HttpServer.serverInstances.get(namespaceKey)
         } else {
             const server = new HttpServer(rootPath, namespaceKey, bootstrapModule, authProvider, httpsConfiguration);
+            HttpServer.serverInstances.set(namespaceKey, server);
+            return server;
+        }
+
+    }
+
+
+    public static initializeFrom(sourceApp: TServer,
+                                 bootstrapModule: any,
+                                 authProvider: TNewable<AuthProvider> = null): HttpServer {
+        const namespaceKey = ModuleMetaKey;
+        if (HttpServer.serverInstances.has(namespaceKey)) {
+            return HttpServer.serverInstances.get(namespaceKey)
+        } else {
+            const server = new HttpServer(sourceApp, namespaceKey, bootstrapModule, authProvider, null);
             HttpServer.serverInstances.set(namespaceKey, server);
             return server;
         }
@@ -205,7 +235,7 @@ export class HttpServer {
         return this;
     }
 
-    public setHttpsConfiguration(httpsConfiguration:any){
+    public setHttpsConfiguration(httpsConfiguration: any) {
         this._httpsConfiguration = httpsConfiguration;
     }
 
@@ -223,27 +253,31 @@ export class HttpServer {
     public listen(port: number, hostname: string);
     public listen(port: number, hostname: string, callback: Function);
     public listen(port: number, hostname?: Function | string, callback: Function = (err?) => {
-    }): http.Server | https.Server {
+    }): TServer {
         if (typeof hostname === "function") {
             callback = hostname;
             hostname = null;
         }
-        const server = this.httpListeners.has(this.instanceId)
-            ? this.httpListeners.get(this.instanceId)
-            : null;
+        const server = this.getServer();
         if (!server) {
             return callback(`No server instance found for port ${port}`);
         }
 
-        const listener = this._httpsConfiguration
+        this.listenerInstance = this._httpsConfiguration
             ? https.createServer(this._httpsConfiguration, server)
             : http.createServer(server);
-        this.initListener(listener, port, hostname as string, callback);
-        return listener;
+        this.initListener(this.listenerInstance, port, hostname as string, callback);
+        return this.listenerInstance;
 
     }
 
-    private async initListener(listener: http.Server | https.Server, port, hostname: string, callback) {
+    public getServer() {
+        return this.httpListeners.has(this.instanceId)
+            ? this.httpListeners.get(this.instanceId)
+            : null;
+    }
+
+    private async initListener(listener, port, hostname: string, callback) {
         if (this._asyncModules.size > 0)
             console.log("Resolving async modules...");
         try {
@@ -345,3 +379,4 @@ export class HttpServer {
 }
 
 
+export type TServer = http.Server | https.Server | { listen: (...args) => any }

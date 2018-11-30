@@ -8,9 +8,10 @@ export class ServerContainerService extends ContainerService {
         return super.initContainer(config);
     }
 
-    static setContainerForId(id: string) {
+    static setContainerForId(id: string):Container {
         this.initContainer();
         ServerContainerService.containersMap.set(id, this.container);
+        return this.container;
     }
 
     static getContainerById(id: string): Container {
