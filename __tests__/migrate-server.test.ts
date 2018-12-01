@@ -88,10 +88,6 @@ describe("basic httpserver logic", () => {
         expect('listen' in HttpServer.getInstance(httpserver.getInstanceId())).toBe(true);
     });
 
-    it("namespace validation", () => {
-        expect(HttpServer.init(Bootstrap, "/testing", "test").getNamespace()).toBe("test");
-    });
-
     it("verify migrated server route",async ()=>{
         await request(server)
             .get('/old')
