@@ -96,7 +96,8 @@ Example:
 ### Build & listen
 After setting the middlewares and error handlers, build and listen to requests by:
 
-    server//HttpServer instance
+    //HttpServer instance
+    server
         .setStatic("assets")
         .setMiddlewares((app) => {
             app.use(bodyParser.json());
