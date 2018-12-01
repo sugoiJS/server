@@ -146,6 +146,15 @@ export class HttpServer {
     }
 
 
+    /**
+     * Allow to set the SugoiJS Server to be attached to existing server application
+     *like express.Application/http.server/etc..
+     *
+     * @param {TServer} sourceApp
+     * @param bootstrapModule
+     * @param {TNewable<AuthProvider>} authProvider
+     * @returns {HttpServer}
+     */
     public static initializeFrom(sourceApp: TServer,
                                  bootstrapModule: any,
                                  authProvider: TNewable<AuthProvider> = null): HttpServer {
