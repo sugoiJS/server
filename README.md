@@ -65,7 +65,7 @@ You are able to use the config template which was set for the @sugoi/demo applic
 
 ### Bootstrapping
 
-To boostrap you server use the 'init' method:
+To bootstrap you server use the 'init' method:
 
     init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider)
 
@@ -76,6 +76,21 @@ when boostrapModule is the entry point module
     import {HttpServer} from "@sugoi/server";
 
     const server:HttpServer = HttpServer.init(ServerModule,"/api");
+
+#### Migrate existing project
+
+SugoiJS support migrate existing project by providing hybrid mode.
+
+For achieving this approach use the `initializeFrom` method
+
+`HttpServer.initializeFrom(sourceApp: TServer, bootstrapModule: any, authProvider?: TNewable<AuthProvider>)`
+`TServer - http.Server | https.Server | { listen: (...args) => any }`
+
+Example:
+
+    import {HttpServer} from "@sugoi/server";
+
+    const server:HttpServer = HttpServer.initializeFrom(myExpressApp,ServerModule);
 
 ### Build & listen
 After setting the middlewares and error handlers, build and listen to requests by:
