@@ -84,6 +84,7 @@ SugoiJS support migrate existing project by providing hybrid mode.
 For achieving this approach use the `initializeFrom` method
 
 `HttpServer.initializeFrom(sourceApp: TServer, bootstrapModule: any, authProvider?: TNewable<AuthProvider>)`
+
 `TServer - http.Server | https.Server | { listen: (...args) => any }`
 
 Example:
