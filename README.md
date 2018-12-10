@@ -19,63 +19,50 @@ SugoiJS server uses [inversify](https://www.npmjs.com/package/inversify), [inver
 
 ## Installation
 
-> npm install --save @sugoi/server
+Setting a SugoiJS application is only three steps away.
 
-### tsconfig.json:
+#### Installing @sugoi/cli
+	
+	$ npm i -g @sugoi/cli
+	
+#### Run SugoiJS initialization wizard
 
-Under your tsconfig - compilerOptions set:
+Use the initialization wizard to define your needs.
 
-- `"target": "es5"`
+	$ sugoi init 
 
-- `"emitDecoratorMetadata": true`
+Or
 
-- `"experimentalDecorators": true`
+	$ sgi init
 
-- `"lib": ["es2015","dom"]`
+#### Install & Run
 
+All you left to do is to install the packages and run your server!
 
-#### TSConfig Template
+	$ npm i && npm start
 
-You are able to use the config template which was set for the @sugoi/demo application:
+#### Enjoy your new server
 
-    {
-      "compilerOptions": {
-        "baseUrl": "./src",
-        "allowJs": true,
-        "target": "es5",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "sourceMap": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "lib": [
-          "es2015",
-          "dom"
-        ],
-        "typeRoots": [
-          "./node_modules/@types"
-        ],
-        "types": [
-          "body-parser",
-          "express",
-          "node"
-        ]
-      }
-    }
+As soon you will done the installation you should be able to reach
+`http://localhost:3000` for reach the client application and `http://localhost:3000/index` for reach the API endpoint.
 
-### Bootstrapping
+#### File structure
 
-To bootstrap you server use the 'init' method:
-
-    init(boostrapModule: any, rootPath?: string, moduleMetaKey?: string, authProvider?: AuthProvider)
-
-when boostrapModule is the entry point module
-
-> rootPath - Server uri prefix
-
-    import {HttpServer} from "@sugoi/server";
-
-    const server:HttpServer = HttpServer.init(ServerModule,"/api");
+	├───client        <-- Your web client application directory
+	│   └───assets
+	├───common        <-- Common (shared) files between client and server
+	└───server        <-- Your SugoiJS server directory
+	    ├───config    <-- Build config (environment, webpack)
+	    │   └───webpack
+	    └───src       <-- Your server app source code
+		├───app   <-- Bootstrap module, Server initialize and listener files, 'authorization' class(optional)
+		│   └───classes
+		├───config     <-- Server configuration (services, paths, etc.)
+		└───modules    <-- All of you application modules
+		    └───index  <-- Single module
+			├───controllers    <-- Modules' controllers
+			├───models         <-- Modules' models(optional)
+			└───services       <-- Modules' services
 
 #### Migrate existing project
 
@@ -127,7 +114,7 @@ After setting the middlewares and error handlers, build and listen to requests b
 
 This call will return http.Server instance which can be use for setting app variables, socket server and more.
 
-### Set module
+### Set a module
 Creating a module requires you to should use the @ServerModule decorator
 
     import {ServerModule} from "@sugoi/server"
@@ -140,7 +127,7 @@ Creating a module requires you to should use the @ServerModule decorator
         constructor(){}
     }
 
-### Set controller
+### Set a controller
 
 SugoiJS use inversify-express-utils decorators and re-export them (also with alias to capitalize camel-case decorator names)
 
@@ -162,7 +149,7 @@ SugoiJS use inversify-express-utils decorators and re-export them (also with ali
 
 Further information can be found on [Inversify-express-utils documentation](https://github.com/inversify/inversify-express-utils)
 
-### Set service
+### Set a service
 For setting class as service the class must be decorated with `@Injectable` decorator, this will set the class as singleton.
 
     @Injectable()
