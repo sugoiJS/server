@@ -1,8 +1,11 @@
+
 export * from "./core-utils";
 export * from "./responses/index";
 
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 import {AuthorizationUtils} from "./utils/authorization.utils";
+
+export {defaultErrorHandler} from "./utils/default-error-handler.util";
 
 export {HttpResponse} from "./classes/http-response.class";
 
@@ -31,5 +34,6 @@ export {HttpServer} from "./classes/http-server.class";
 export {ModuleItem} from "./interfaces/module-item.interface";
 
 export * from "./decorators";
+
 
 

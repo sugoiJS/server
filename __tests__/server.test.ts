@@ -1,4 +1,3 @@
-import {HttpServer} from "../classes/http-server.class";
 import {AuthService} from "./app/services/auth.service";
 import {Bootstrap} from "./app/app";
 import {Server} from "net";
@@ -6,7 +5,7 @@ import * as path from "path";
 import {SugoiServerError} from "../exceptions/server.exception";
 import {Sub1Service} from "./app/submodule/sub1/sub1.service";
 import {Sub1Module} from "./app/submodule/sub1/sub1.module";
-// import * as rp from "request-promise";
+import {HttpServer, defaultErrorHandler} from "../index";
 const moxios = require('moxios');
 const request = require('supertest');
 
@@ -50,11 +49,7 @@ beforeAll(async () => {
                 });
             })
             .setErrorHandlers((app) => {
-                app.use((err: SugoiServerError, req, res, next) => {
-                    console.error(err.code + " - " + err.message);
-                    delete err.stack;
-                    res.status(err.code).send(err);
-                })
+                app.use(defaultErrorHandler(false))
             })
             .build();
         server = httpserver
