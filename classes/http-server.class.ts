@@ -100,9 +100,9 @@ export class HttpServer {
         this.moduleMetaKey = moduleMetaKey;
         this.loadModules(module, this._container);
         if (!this.listenerInstance) {
-            this._serverInstance = new InversifyExpressServer(this._container as any, null, {rootPath: rootPath as string}, null, authProvider,false);
+            this._serverInstance = new InversifyExpressServer(this._container as any, null, {rootPath: rootPath as string}, null, authProvider, false);
         } else {
-            this._serverInstance = new InversifyExpressServer(this._container as any, null, null, rootPath as express.Application, authProvider,false);
+            this._serverInstance = new InversifyExpressServer(this._container as any, null, null, rootPath as express.Application, authProvider, false);
         }
 
     }
@@ -272,11 +272,14 @@ export class HttpServer {
             return callback(`No server instance found for port ${port}`);
         }
 
-        this.listenerInstance = this._httpsConfiguration
+        const listener = this._httpsConfiguration
             ? https.createServer(this._httpsConfiguration, server)
-            : http.createServer(server);
-        this.initListener(this.listenerInstance, port, hostname as string, callback);
-        return this.listenerInstance;
+            : server;
+
+        const listener$ = this.initListener(listener, port, hostname as string, callback);
+        server['close'] = function(){listener$.then(listenerRes=>listenerRes.close())};
+        this.listenerInstance = server;
+        return server;
 
     }
 
@@ -287,14 +290,15 @@ export class HttpServer {
     }
 
     private async initListener(listener, port, hostname: string, callback) {
-        if (this._asyncModules.size > 0)
+        if (this._asyncModules.size > 0) {
             console.log("Resolving async modules...");
-        try {
-            await Promise.all(this._asyncModules.values());
-        } catch (err) {
-            return callback(err);
+            try {
+                await Promise.all(this._asyncModules.values());
+            } catch (err) {
+                return callback(err);
+            }
+            this._asyncModules.clear();
         }
-        this._asyncModules.clear();
         listener.listen(port, hostname, err => {
             if (!err) {
                 console.log(SUGOI_ICON);
