@@ -41,6 +41,18 @@ All you left to do is to install the packages and run your server!
 
 	$ npm i && npm start
 
+#### Development command (live reload)
+
+For using the live reload feature you need to
+
+   1. Build with watch by using the `dev` action - command session won't get closed
+
+	npm run dev
+
+   2. Run the server with nodemon - command session won't get closed
+
+	npm run start:watch
+
 #### Enjoy your new server
 
 As soon you will done the installation you should be able to reach
