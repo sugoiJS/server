@@ -8,12 +8,13 @@ import {EXCEPTIONS} from "../constants/exceptions.constant";
 import {ModuleMetaKey} from "../constants/meta-key";
 import * as express from "express";
 import {AuthProvider} from "./auth-provider.class";
-import {SUGOI_ICON} from "../constants/icons";
+import {SUGOI_MSG} from "../constants/icons";
 import {TNewable} from "../interfaces/newable.type";
 import {ServerContainerService} from "../services/server-container.service";
 import {IServerModule} from "../interfaces/server-module.interface";
 import * as http from "http";
 import * as https from "https";
+import * as serveStatic from "serve-static";
 
 export class HttpServer {
     private static readonly ID_PREFIX = "SUG_SERVER";
@@ -200,11 +201,12 @@ export class HttpServer {
      *
      * @param {string} pathToStatic - path to your static files
      * @param {string} route - path to use as route - ex. app.use(path,()=>void)
+     * @param {serveStatic.ServeStaticOptions} options - options of the static middleware
      */
-    public setStatic(pathToStatic: string, route?: string) {
+    public setStatic(pathToStatic: string, route?: string,options?: serveStatic.ServeStaticOptions) {
         const cb = (app) => route
-            ? app.use(route, express.static(pathToStatic))
-            : app.use(express.static(pathToStatic));
+            ? app.use(route, express.static(pathToStatic,options))
+            : app.use(express.static(pathToStatic,options));
         this.viewMiddleware.splice(0, 0, cb);
         return this;
     }
@@ -274,9 +276,9 @@ export class HttpServer {
 
         this.listenerInstance = this._httpsConfiguration
             ? https.createServer(this._httpsConfiguration, server)
-            : http.createServer(server);
-        this.initListener(this.listenerInstance, port, hostname as string, callback);
-        return this.listenerInstance;
+            : server;
+        return this.initListener(this.listenerInstance, port, hostname as string, callback);
+        // return this.listenerInstance;
 
     }
 
@@ -286,26 +288,27 @@ export class HttpServer {
             : null;
     }
 
-    private async initListener(listener, port, hostname: string, callback) {
-        if (this._asyncModules.size > 0)
-            console.log("Resolving async modules...");
-        try {
-            await Promise.all(this._asyncModules.values());
-        } catch (err) {
-            return callback(err);
-        }
-        this._asyncModules.clear();
-        listener.listen(port, hostname, err => {
+    private initListener(listener, port, hostname: string, callback) {
+        return listener.listen(port, hostname,async err => {
             if (!err) {
-                console.log(SUGOI_ICON);
+                console.log(SUGOI_MSG,port);
             }
-
             callback(err);
         });
     }
 
-    protected loadModules(module: any, container: Container) {
+    protected async loadModules(module: any, container: Container) {
         this.handleModules(module, container);
+        // if (this._asyncModules.size > 0) {
+        //     console.log("Resolving async modules...");
+        //     try {
+        //         await Promise.all(this._asyncModules.values());
+        //     } catch (err) {
+        //         // return callback(err);
+        //     }
+        //     this._asyncModules.clear();
+        // }
+
         // .then(moduleContainers => {
         // container.load(...moduleContainers.containers);
         // container.loadAsync(...moduleContainers.asyncContainers);
