@@ -8,12 +8,13 @@ import {EXCEPTIONS} from "../constants/exceptions.constant";
 import {ModuleMetaKey} from "../constants/meta-key";
 import * as express from "express";
 import {AuthProvider} from "./auth-provider.class";
-import {SUGOI_ICON} from "../constants/icons";
 import {TNewable} from "../interfaces/newable.type";
 import {ServerContainerService} from "../services/server-container.service";
 import {IServerModule} from "../interfaces/server-module.interface";
 import * as http from "http";
 import * as https from "https";
+import * as serveStatic from "serve-static";
+import {SUGOI_INIT_MSG} from "../constants/message.contant";
 
 export class HttpServer {
     private static readonly ID_PREFIX = "SUG_SERVER";
@@ -200,11 +201,12 @@ export class HttpServer {
      *
      * @param {string} pathToStatic - path to your static files
      * @param {string} route - path to use as route - ex. app.use(path,()=>void)
+     * @param {serveStatic.ServeStaticOptions} options - options of the static middleware
      */
-    public setStatic(pathToStatic: string, route?: string) {
+    public setStatic(pathToStatic: string, route?: string,options?: serveStatic.ServeStaticOptions) {
         const cb = (app) => route
-            ? app.use(route, express.static(pathToStatic))
-            : app.use(express.static(pathToStatic));
+            ? app.use(route, express.static(pathToStatic,options))
+            : app.use(express.static(pathToStatic,options));
         this.viewMiddleware.splice(0, 0, cb);
         return this;
     }
@@ -261,12 +263,14 @@ export class HttpServer {
     public listen(port: number, callback: Function);
     public listen(port: number, hostname: string);
     public listen(port: number, hostname: string, callback: Function);
-    public listen(port: number, hostname?: Function | string, callback: Function = (err?) => {
+    public listen(port: number, hostnameOrCallback?: Function | string, callback: Function = (err?) => {
     }): TServer {
+        let hostname = hostnameOrCallback;
         if (typeof hostname === "function") {
-            callback = hostname;
+            callback = hostnameOrCallback as Function;
             hostname = null;
         }
+        console.log("listen values", hostname,callback);
         const server = this.getServer();
         if (!server) {
             return callback(`No server instance found for port ${port}`);
@@ -297,7 +301,7 @@ export class HttpServer {
         this._asyncModules.clear();
         listener.listen(port, hostname, err => {
             if (!err) {
-                console.log(SUGOI_ICON);
+                console.log(SUGOI_INIT_MSG,port,process.env.NODE_ENV);
             }
 
             callback(err);
