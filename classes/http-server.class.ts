@@ -270,7 +270,6 @@ export class HttpServer {
             callback = hostnameOrCallback as Function;
             hostname = null;
         }
-        console.log("listen values", hostname,callback);
         const server = this.getServer();
         if (!server) {
             return callback(`No server instance found for port ${port}`);
