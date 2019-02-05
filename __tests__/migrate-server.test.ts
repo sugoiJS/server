@@ -112,6 +112,14 @@ describe("basic httpserver logic", () => {
             .set("id","1")
             .expect(200, {message:"fine new 2"});
     })
+
+    it("resolving route info",()=>{
+        httpserver.getServer().post('/dynamicPath',()=>null);
+        expect(httpserver.getRouteInfo().toDictionary()['GET /index/:id']).toBeDefined();
+        // expect(httpserver.getRouteInfo().toDictionary()['POST /dynamicPath']).toBeDefined();
+        // expect(httpserver.getRouteInfo().toDictionary()['GET /old']).toBeDefined();
+    })
+
 });
 
 describe("schema policy check", () => {
@@ -263,5 +271,37 @@ describe("check custom reponses", () => {
             .get('/sub3/badrequest')
             .expect(400, "bad request");
     });
+
+});
+
+describe("inject check", () => {
+    const baseUri = "/index/inject/";
+    beforeEach(() => {
+        moxios.install();
+    });
+    afterEach(() => {
+        moxios.uninstall();
+    });
+
+    it("#get /inject/singleton", async () => {
+        await request(server)
+            .get(baseUri + "singleton")
+            .set(sugoiHeader, "34")
+            .expect(200, 'true');
+    })
+
+    it("#get /inject/constant", async () => {
+        await request(server)
+            .get(baseUri + "constant")
+            .set(sugoiHeader, "34")
+            .expect(200, 'true');
+    })
+
+    it("#get /inject/factory", async () => {
+        await request(server)
+            .get(baseUri + "constant")
+            .set(sugoiHeader, "34")
+            .expect(200, 'true');
+    })
 
 });

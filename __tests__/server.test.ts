@@ -2,9 +2,6 @@ import {AuthService} from "./app/services/auth.service";
 import {Bootstrap} from "./app/app";
 import {Server} from "net";
 import * as path from "path";
-import {SugoiServerError} from "../exceptions/server.exception";
-import {Sub1Service} from "./app/submodule/sub1/sub1.service";
-import {Sub1Module} from "./app/submodule/sub1/sub1.module";
 import {HttpServer, defaultErrorHandler} from "../index";
 const moxios = require('moxios');
 const request = require('supertest');
@@ -27,7 +24,7 @@ const responses = {
             "validationResult": {"data": [3], "message": "Doesn't have permissions"}
         }]
     },
-    noInRole: {
+    notInRole: {
         message: 'Call blocked by resource policy',
         code: 403,
         data: [{
@@ -69,6 +66,12 @@ describe("basic httpserver logic", () => {
     it("namespace validation", () => {
         expect(HttpServer.init(Bootstrap, "/testing", "test").getNamespace()).toBe("test");
     });
+
+    it("resolving route info",()=>{
+        expect(httpserver.getRouteInfo().toDictionary()['GET /index/:id']).toBeDefined();
+        // httpserver.getServer().get('/dynamicPath',()=>null);
+        // expect(httpserver.getRouteInfo().toDictionary()['GET /dynamicPath']).toBeDefined();
+    })
 
 });
 
@@ -129,12 +132,44 @@ describe("auth policy check", () => {
         await request(server)
             .get(baseUri + "roles")
             .set(sugoiHeader, "34")
-            .expect(403, responses.noInRole);
+            .expect(403, responses.notInRole);
 
         await request(server)
             .get(baseUri + "roles/approved")
             .set(sugoiHeader, "34")
             .expect(200, {valid: true});
+    })
+
+});
+
+describe("inject check", () => {
+    const baseUri = "/index/inject/";
+    beforeEach(() => {
+        moxios.install();
+    });
+    afterEach(() => {
+        moxios.uninstall();
+    });
+
+    it("#get /inject/singleton", async () => {
+        await request(server)
+            .get(baseUri + "singleton")
+            .set(sugoiHeader, "34")
+            .expect(200, 'true');
+    })
+
+    it("#get /inject/constant", async () => {
+        await request(server)
+            .get(baseUri + "constant")
+            .set(sugoiHeader, "34")
+            .expect(200, 'true');
+    })
+
+    it("#get /inject/factory", async () => {
+        await request(server)
+            .get(baseUri + "constant")
+            .set(sugoiHeader, "34")
+            .expect(200, 'true');
     })
 
 });

@@ -1,6 +1,4 @@
-import '@sugoi/core';
-import {Container} from '@sugoi/core';
-import {InversifyExpressServer} from 'inversify-express-utils';
+import {Container, Injectable, decorate} from '@sugoi/core';
 import {IExpressCallback} from "../interfaces/express-callback.interface";
 import {IModuleMetadata} from "../interfaces/module-meta.interface";
 import {SugoiServerError} from "../exceptions/server.exception";
@@ -11,10 +9,12 @@ import {AuthProvider} from "./auth-provider.class";
 import {TNewable} from "../interfaces/newable.type";
 import {ServerContainerService} from "../services/server-container.service";
 import {IServerModule} from "../interfaces/server-module.interface";
+import {getRouteInfo, InversifyExpressServer} from 'inversify-express-utils';
 import * as http from "http";
 import * as https from "https";
 import * as serveStatic from "serve-static";
 import {SUGOI_INIT_MSG} from "../constants/message.contant";
+import {RouteInfo} from "./route-info.class";
 
 export class HttpServer {
     private static readonly ID_PREFIX = "SUG_SERVER";
@@ -101,9 +101,9 @@ export class HttpServer {
         this.moduleMetaKey = moduleMetaKey;
         this.loadModules(module, this._container);
         if (!this.listenerInstance) {
-            this._serverInstance = new InversifyExpressServer(this._container as any, null, {rootPath: rootPath as string}, null, authProvider,false);
+            this._serverInstance = new InversifyExpressServer(this._container as any, null, {rootPath: rootPath as string}, null, authProvider, false);
         } else {
-            this._serverInstance = new InversifyExpressServer(this._container as any, null, null, rootPath as express.Application, authProvider,false);
+            this._serverInstance = new InversifyExpressServer(this._container as any, null, null, rootPath as express.Application, authProvider, false);
         }
 
     }
@@ -203,10 +203,10 @@ export class HttpServer {
      * @param {string} route - path to use as route - ex. app.use(path,()=>void)
      * @param {serveStatic.ServeStaticOptions} options - options of the static middleware
      */
-    public setStatic(pathToStatic: string, route?: string,options?: serveStatic.ServeStaticOptions) {
+    public setStatic(pathToStatic: string, route?: string, options?: serveStatic.ServeStaticOptions) {
         const cb = (app) => route
-            ? app.use(route, express.static(pathToStatic,options))
-            : app.use(express.static(pathToStatic,options));
+            ? app.use(route, express.static(pathToStatic, options))
+            : app.use(express.static(pathToStatic, options));
         this.viewMiddleware.splice(0, 0, cb);
         return this;
     }
@@ -272,7 +272,7 @@ export class HttpServer {
         }
         const server = this.getServer();
         if (!server) {
-            return callback(`No server instance found for port ${port}`);
+            return callback(`No server instance found for instance  ${this.instanceId}`);
         }
 
         this.listenerInstance = this._httpsConfiguration
@@ -300,7 +300,7 @@ export class HttpServer {
         this._asyncModules.clear();
         listener.listen(port, hostname, err => {
             if (!err) {
-                console.log(SUGOI_INIT_MSG,port,process.env.NODE_ENV);
+                console.log(SUGOI_INIT_MSG, port, process.env.NODE_ENV);
             }
 
             callback(err);
@@ -372,20 +372,67 @@ export class HttpServer {
         return this.instanceId;
     }
 
-    private registerServices(bind, container, ...services) {
+    public getRouteInfo(): RouteInfo {
+        return new RouteInfo(getRouteInfo(this.container));
+    }
+
+    private registerServices(bind, container: Container, ...services) {
+
         for (let service of services) {
-            const serviceName = service.name;
-            if (container.isBound(serviceName))
-                continue;
-            container.bind(service).to(service).inSingletonScope();
-            service = container.get(service);
+            try {
+                this.registerService(bind, container, service)
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+
+    private registerService(bind, container, provider) {
+        let providerName, type = 'singleton';
+        if (provider.hasOwnProperty('provide')) {
+            if (!provider.hasOwnProperty('useName')) {
+                throw new SugoiServerError(`No 'useName' property defined for provider`, EXCEPTIONS.MISSING_PROPERTY.code, provider)
+            }
+            providerName = provider.useName;
+            provider = provider.provide;
+            type = provider.type;
+            if (!type) {
+                if (typeof provider === "function") {
+                    type = provider.name === 'provide' ? 'factory' : 'singleton';
+                } else {
+                    type = "constant";
+                }
+            }
+        }
+        else {
+            providerName = provider.name;
+        }
+        if (container.isBound(providerName))
+            return;
+        let shouldRefBind = true;
+        switch (type.toLowerCase()) {
+            case 'factory':
+                container.bind(providerName).toFactory(provider);
+                shouldRefBind = false;
+                break;
+            case 'singleton':
+                container.bind(provider).to(provider).inSingletonScope();
+                break;
+            case 'constant':
+            default:
+                container.bind(provider).toConstantValue(provider);
+                break;
+
+        }
+        if (shouldRefBind) {
+            provider = container.get(provider);
             const insRef = {
                 factory: (function () {
-                    return service
-                }).bind(service)
+                    return provider
+                }).bind(provider)
             };
-            container.bind(serviceName).toFactory(insRef.factory);
-            container.bind(Symbol.for(serviceName)).toFactory(insRef.factory);
+            container.bind(providerName).toFactory(insRef.factory);
+            container.bind(Symbol.for(providerName)).toFactory(insRef.factory);
         }
     }
 }

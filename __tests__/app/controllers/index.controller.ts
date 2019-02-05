@@ -14,6 +14,9 @@ import {
 } from "../../../index";
 import {AuthService} from "../services/auth.service";
 import {SugoiServerError} from "../../../exceptions/server.exception";
+import {Inject} from "@sugoi/core";
+import {TestService} from "../services/test.service";
+import {HttpServer} from "../../../classes/http-server.class";
 
 const RequestWithIDSchema = {id: ComparableSchema.ofType(SchemaTypes.STRING).setMandatory(true)};
 
@@ -21,6 +24,15 @@ const RequestWithIDSchema = {id: ComparableSchema.ofType(SchemaTypes.STRING).set
 @Controller("/index")
 export class IndexController {
     static validResponse = {valid: true};
+
+    @Inject('TestServiceName')
+    public testSingleton: TestService;
+
+    @Inject('TestInstance')
+    public testInstance: TestService;
+
+    @Inject('TestFactory')
+    public testFactory: TestService;
 
     @HttpGet("/:id")
     @RequestParamsSchemaPolicy(RequestWithIDSchema)
@@ -64,5 +76,22 @@ export class IndexController {
     @Authorized([2, 4], null, 403)
     public shouldBeInRoleApproved() {
         return IndexController.validResponse;
+    }
+
+    @HttpGet("/inject/singleton")
+    public getSingleton(@Request() req){
+        return this.testSingleton === req.container.get('TestServiceName')
+    }
+
+    @HttpGet("/inject/constant")
+    public getConst(@Request() req){
+        return this.testInstance === req.container.get('TestInstance')
+    }
+
+    @HttpGet("/inject/factory")
+    public getFactory(@Request() req){
+        const factoryA = this.testFactory;
+        const factoryB = req.container.get('TestFactory');
+        return factoryA!== factoryB && factoryA.getTest() !== factoryB.getTest();
     }
 }

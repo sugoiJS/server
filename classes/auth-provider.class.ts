@@ -5,11 +5,13 @@ import {TStringOrNumber} from "../decorators/authorization-policy.decorator";
 
 @Injectable()
 export abstract class AuthProvider<T=any> implements interfaces.AuthProvider {
+    static Counter:number = 1;
     cookies: any;
     headers: any;
     details: any;
+    test: any;
 
-    public setRequestData(request:e.Request){
+    public setRequestData(request: e.Request) {
         this.headers = request.headers;
         this.cookies = request.cookies;
         return this;
@@ -17,7 +19,7 @@ export abstract class AuthProvider<T=any> implements interfaces.AuthProvider {
 
     abstract isAuthenticated(): Promise<boolean>;
 
-    abstract isResourceOwner(resourceId: any,resourceType?:any,...args:any[]): Promise<boolean>;
+    abstract isResourceOwner(resourceId: any, resourceType?: any, ...args: any[]): Promise<boolean>;
 
     abstract getUser(req: e.Request, res: e.Response, next: e.NextFunction): Promise<any>;
 
@@ -28,12 +30,11 @@ export abstract class AuthProvider<T=any> implements interfaces.AuthProvider {
     getUserData(): Promise<T> {
         return Promise.resolve(this.details);
     }
-
-    setUserData(userData:T): void {
+    setUserData(userData: T): void {
         this.details = userData;
     }
 
-    static builder(){
-        return new (<any>this)();
+    static builder(test?:any) {
+        return new (<any>this)(test);
     }
 }

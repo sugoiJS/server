@@ -2,9 +2,9 @@ import {Request, Response, NextFunction, ErrorRequestHandler} from 'express';
 import {GenericError} from "../classes/generic-error.class";
 
 
-export const defaultErrorHandler = (development: boolean = true): ErrorRequestHandler => {
+export const defaultErrorHandler = (returnErrorStack: boolean = true): ErrorRequestHandler => {
     return (err: Error, req: Request, res: Response, next: NextFunction) => {
-        if (!development) {
+        if (!returnErrorStack) {
             console.error(err.stack);
             delete err.stack;
         }
