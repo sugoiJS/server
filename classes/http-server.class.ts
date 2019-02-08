@@ -394,8 +394,8 @@ export class HttpServer {
                 throw new SugoiServerError(`No 'useName' property defined for provider`, EXCEPTIONS.MISSING_PROPERTY.code, provider)
             }
             providerName = provider.useName;
-            provider = provider.provide;
             type = provider.type;
+            provider = provider.provide;
             if (!type) {
                 if (typeof provider === "function") {
                     type = provider.name === 'provide' ? 'factory' : 'singleton';
@@ -426,6 +426,7 @@ export class HttpServer {
         }
         if (shouldRefBind) {
             provider = container.get(provider);
+
             const insRef = {
                 factory: (function () {
                     return provider
