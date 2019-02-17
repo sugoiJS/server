@@ -69,8 +69,10 @@ describe("basic httpserver logic", () => {
 
     it("resolving route info",()=>{
         expect(httpserver.getRouteInfo().toDictionary()['GET /index/:id']).toBeDefined();
-        // httpserver.getServer().get('/dynamicPath',()=>null);
-        // expect(httpserver.getRouteInfo().toDictionary()['GET /dynamicPath']).toBeDefined();
+    });
+
+    it("resolving route string info",()=>{
+        expect(httpserver.getRouteInfo().toString()).toEqual(JSON.stringify(httpserver.getRouteInfo().toDictionary()));
     })
 
 });

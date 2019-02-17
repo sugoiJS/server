@@ -5,13 +5,13 @@ export class RouteInfo {
         this.routes = routes;
     }
 
-    public valueOf() {
+    public toArray(): Array<Route> {
         return this.routes;
     }
 
-    toDictionary() {
+    toDictionary(): { [endpoint: string]: { controller: string, args: string[] } } {
         const dict = {};
-        this.routes.forEach(route => {
+        this.toArray().forEach(route => {
             route.endpoints.forEach(endpoint => {
                 dict[endpoint.route] = {controller: route.controller, args: endpoint.args};
             })
@@ -20,7 +20,7 @@ export class RouteInfo {
     }
 
     toString() {
-        JSON.stringify(this.toDictionary())
+        return JSON.stringify(this.toDictionary())
     }
 
 }
