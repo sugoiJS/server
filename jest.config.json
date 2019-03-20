@@ -1,0 +1,33 @@
+{
+    "clearMocks": true,
+
+    "coverageDirectory": "coverage",
+
+    "transform": {
+        "^.+\\.(ts|tsx)?$": "ts-jest"
+    },
+    "globals":{
+        "ts-jest": {
+            "skipBabel": true,
+            "enableTsDiagnostics": false
+        }
+    },
+    "moduleFileExtensions": [
+        "js",
+        "ts",
+        "json",
+        "jsx",
+        "node"
+    ],
+
+
+    "testMatch": [
+        "**/__tests__/**/?(*.)+(spec|test).js?(x)",
+        "**/__tests__/?(*.)+(spec|test).js?(x)",
+        "**/?(*.)+(spec|test).js?(x)"
+    ],
+
+    "testPathIgnorePatterns": [
+        "\\\\node_modules\\\\"
+    ]
+}
