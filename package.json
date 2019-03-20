@@ -27,7 +27,7 @@
     "decorator",
     "annotation",
     "express",
-    "gaurds",
+    "guards",
     "policies",
     "policy"
   ],

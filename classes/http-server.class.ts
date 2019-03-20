@@ -1,4 +1,4 @@
-import {Container, Injectable, decorate} from '@sugoi/core';
+import {Container, Injectable, decorate, ContainerModule, AsyncContainerModule} from '@sugoi/core';
 import {IExpressCallback} from "../interfaces/express-callback.interface";
 import {IModuleMetadata} from "../interfaces/module-meta.interface";
 import {SugoiServerError} from "../exceptions/server.exception";
@@ -19,6 +19,7 @@ import {RouteInfo} from "./route-info.class";
 export class HttpServer {
     private static readonly ID_PREFIX = "SUG_SERVER";
     private static INCREMENTAL_ID = 1;
+    private _asyncModulesList: Array<Promise<any>> = [];
 
     public get container() {
         return this._container;
@@ -289,21 +290,30 @@ export class HttpServer {
             : null;
     }
 
-    private async initListener(listener, port, hostname: string, callback) {
-        if (this._asyncModules.size > 0)
+    private initListener(listener, port, hostname: string, callback) {
+        let promise;
+        if (this._asyncModules.size > 0) {
             console.log("Resolving async modules...");
-        try {
-            await Promise.all(this._asyncModules.values());
-        } catch (err) {
-            return callback(err);
+            promise = Promise.all(this._asyncModulesList)
+                .then(_ => {
+                    this._asyncModules.clear();
+                    this._asyncModulesList.length = 0;
+                })
+                .catch(err => {
+                    callback(err);
+                    throw err;
+                });
+        } else {
+            promise = Promise.resolve(true);
         }
-        this._asyncModules.clear();
-        listener.listen(port, hostname, err => {
-            if (!err) {
-                console.log(SUGOI_INIT_MSG, port, process.env.NODE_ENV);
-            }
+        return promise.then(res => {
+            listener.listen(port, hostname, err => {
+                if (!err) {
+                    console.log(SUGOI_INIT_MSG, port, process.env.NODE_ENV);
+                }
 
-            callback(err);
+                callback(err);
+            });
         });
     }
 
@@ -320,14 +330,12 @@ export class HttpServer {
         containers: []
     }): Promise<any> {
         const moduleMeta: IModuleMetadata = Reflect.getMetadata(this.moduleMetaKey, module) || {};
-        let {services, modules, controllers, dependencies} = moduleMeta;
+        let {services, modules, controllers} = moduleMeta;
         modules = modules || [];
-        dependencies = dependencies || [];
         services = Array.isArray(services) ? services : [];
         this.registerServices(container.bind, container, ...services);
         if (!container.isBound(module.name)) {
-
-            await this.loadModule(module, container, modules, containerModulesObjects);
+            return await this.loadModule(module, container, modules, containerModulesObjects);
         }
         else {
             return await this._asyncModules.get(module.name);
@@ -335,23 +343,26 @@ export class HttpServer {
 
     }
 
-    private async loadModule(module: TNewable<IServerModule>, container: Container, modules: Array<TNewable<IServerModule>>, containerModulesObjects) {
-        this.registerServices(container.bind, container, module);
+    private loadModule(module: TNewable<IServerModule>, container: Container, modules: Array<TNewable<IServerModule>>, containerModulesObjects) {
+        this.registerServices(container.bind, container, {provide: module, type: "constant", useName: module.name});
         const moduleInstance = container.resolve<IServerModule>(module);
 
         let res = "onLoad" in moduleInstance
             ? moduleInstance.onLoad()
             : null;
-        //register the module for being singleton
+        // Register the module for being singleton
         if (res instanceof Promise) {
-            res = res.then(async (res) => {
-                await modules.map(async subModule => this.handleModules(subModule, container, containerModulesObjects));
-            });
-            this._asyncModules.set(moduleInstance.constructor.name, res)
+            res = res.then((res) => {
+                return Promise.all(modules.map( subModule => this.handleModules(subModule, container, containerModulesObjects)));
+            }) as any;
         }
         else {
-            await modules.map(async subModule => this.handleModules(subModule, container, containerModulesObjects));
+            res = Promise.all(modules.map(async subModule => this.handleModules(subModule, container, containerModulesObjects))) as any;
         }
+        this._asyncModules.set(moduleInstance.constructor.name, res as any);
+        this._asyncModulesList.push(res as any);
+        return res;
+
 
     }
 

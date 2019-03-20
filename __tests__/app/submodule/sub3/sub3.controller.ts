@@ -18,10 +18,10 @@ export class Sub3Controller {
         return {date: this.sub1Service.date};
     }
 
-    // @HttpGet("/date2")
-    // async getDate2() {
-    //     return {date: this.sub1Service.date2};
-    // }
+    @HttpGet("/date2")
+    async getDate2() {
+        return {date: this.sub1Service.date2};
+    }
 
     @HttpGet("/notfound")
     async notFound() {
