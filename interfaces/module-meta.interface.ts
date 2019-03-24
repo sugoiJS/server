@@ -15,5 +15,4 @@ export interface IModuleMetadata {
     controllers?: ModuleItem<any>[];
     services?: Array<ModuleItem<any> | IProvider>;
     modules?: Array<TNewable<IServerModule> | any>;
-    dependencies?: Array<TNewable<IServerModule>>;
 }
