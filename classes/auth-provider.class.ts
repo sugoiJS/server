@@ -9,11 +9,13 @@ export abstract class AuthProvider<T=any> implements interfaces.AuthProvider {
     cookies: any;
     headers: any;
     details: any;
+    request: e.Request;
     test: any;
 
     public setRequestData(request: e.Request) {
         this.headers = request.headers;
         this.cookies = request.cookies;
+        this.request = request;
         return this;
     }
 
