@@ -361,11 +361,11 @@ export class HttpServer {
 
         if (res instanceof Promise) {
             res = res.then((res) => {
-                return Promise.all(modules.map( subModule => this.handleModules(subModule, container, graph, containerModulesObjects)));
+                return Promise.all(modules.map( subModule => this.handleModules(subModule, container, [...graph], containerModulesObjects)));
             }) as any;
         }
         else {
-            res = Promise.all(modules.map(async subModule => this.handleModules(subModule, container, graph, containerModulesObjects))) as any;
+            res = Promise.all(modules.map(async subModule => this.handleModules(subModule, container, [...graph], containerModulesObjects))) as any;
         }
         if(res) {
             this._asyncModules.set(moduleInstance.constructor.name, res as any);
@@ -462,7 +462,7 @@ export class HttpServer {
         const found = graph.indexOf(moduleName) > -1;
         graph.push(moduleName);
         if (found) {
-            console.error("Circular dependencies while loading modules \n",graph.join(' --> '));
+            console.error("Circular dependencies detected while loading modules \n",graph.join(' --> '));
             throw new Error("CIRCULAR DEPENDENCIES");
         }
     }
