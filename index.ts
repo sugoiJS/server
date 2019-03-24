@@ -5,6 +5,7 @@ export * from "./responses/index";
 
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 import {AuthorizationUtils} from "./utils/authorization.utils";
+export {Injector} from "./classes/injector.class";
 
 export {defaultErrorHandler} from "./utils/default-error-handler.util";
 
