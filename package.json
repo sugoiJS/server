@@ -1,6 +1,6 @@
 {
   "name": "@sugoi/server",
-  "version": "3.4.2",
+  "version": "3.4.3",
   "description": "SugoiJS server module, relays on express and inversify",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
