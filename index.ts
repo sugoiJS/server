@@ -3,8 +3,17 @@ import "@sugoi/core";
 export * from "./core-utils";
 export * from "./responses/index";
 
+/**
+ * Init utilities
+ */
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 import {AuthorizationUtils} from "./utils/authorization.utils";
+
+/**
+ * MODULE EXPORTS
+ */
+export {HTTP_METHOD} from "./constants/methods.constant";
+
 export {Injector} from "./classes/injector.class";
 
 export {defaultErrorHandler} from "./utils/default-error-handler.util";
@@ -37,5 +46,4 @@ export {ModuleItem} from "./interfaces/module-item.interface";
 
 export * from "./decorators";
 
-
-
+export {CRUDController,CRUDControllerFactory} from "./classes/crud-controller.class";

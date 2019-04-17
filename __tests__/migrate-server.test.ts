@@ -62,7 +62,7 @@ beforeAll(async () => {
             })
             .setErrorHandlers((app) => {
                 app.use((err: SugoiServerError, req, res, next) => {
-                    console.error(err.code + " - " + err.message);
+                    // console.error(err.code + " - " + err.message);
                     delete err.stack;
                     res.status(err.code).send(err);
                 })
@@ -202,29 +202,29 @@ describe("sub modules check", () => {
             .expect(202, {message: "hello"});
     });
 
-    // it("validate onLoad logic", async () => {
-    //     await request(server)
-    //         .get('/sub2/date')
-    //         .expect(200, {date: new Date("2018-10-18").toISOString()});
-    //
-    // });
+    it("validate onLoad logic", async () => {
+        await request(server)
+            .get('/sub2/date')
+            .expect(200, {date: new Date("2018-10-18").toISOString()});
+
+    });
 
 
-    // it("validate dependencies logic", async () => {
-    //     await request(server)
-    //         .get('/sub3/date')
-    //         .expect(200, {date: new Date("2018-10-18").toISOString()});
-    //
-    //     // await request(server)
-    //     //     .get('/sub3/date2')
-    //     //     .expect(200, {date: new Date("2018-10-19").toISOString()});
-    //
-    // });
+    it("validate dependencies logic", async () => {
+        await request(server)
+            .get('/sub3/date')
+            .expect(200, {date: new Date("2018-10-18").toISOString()});
 
-    // it("validate dependencies onload logic", () => {
-    //     const sub1Service = httpserver.container.get(Sub1Service);
-    //     expect(sub1Service.date2).toBeDefined();
-    // });
+        await request(server)
+            .get('/sub3/date2')
+            .expect(200, {date: new Date("2018-10-19").toISOString()});
+
+    });
+
+    it("validate dependencies onload logic", () => {
+        const sub1Service = httpserver.container.get(Sub1Service);
+        expect(sub1Service.date2).toBeDefined();
+    });
 
 
 });

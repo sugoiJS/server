@@ -2,7 +2,7 @@ export * from "./express-utils.decorator";
 
 export {ServerModule} from "./server-module.decorator";
 
-export {Authorized} from "./authorization-policy.decorator";
+export {Authorized, HasPermission, HasRole} from "./authorization-policy.decorator";
 
 export {
     RequestBodySchemaPolicy,

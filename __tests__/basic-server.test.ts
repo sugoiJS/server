@@ -1,17 +1,21 @@
 import {AuthService} from "./app/services/auth.service";
 import {Server} from "net";
 import * as path from "path";
+import * as express from "express";
 import {HttpServer, defaultErrorHandler} from "../index";
 import {Bootstrap2Module} from "./app/submodule/bootstrap-2/bootstrap-2.module";
 
-let server: Server, httpserver: HttpServer;
-const sugoiHeader = "x-sug-auth";
+const moxios = require('moxios');
+const request = require('supertest');
+
+let server: Server, httpserver: HttpServer, listenError;
 
 
 beforeAll(async () => {
     httpserver = HttpServer.init(Bootstrap2Module, "/base", null, AuthService)
         .setStatic(path.resolve(__dirname, "../static"))
         .setMiddlewares((app) => {
+            app.use(express.json());
             app.use((req, res, next) => {
                 (<AuthService>req['AuthProvider']).getUser(req, res, next);
                 next();
@@ -21,24 +25,138 @@ beforeAll(async () => {
             app.use(defaultErrorHandler(false))
         })
         .build();
-
+    return await new Promise(resolve => {
+        const start = performance.now();
+        server = httpserver
+            .listen(19998, (err) => {
+                console.debug('basic test loaded, err: %s, init duration: %s', err, performance.now() - start);
+                console.log(httpserver.getRouteInfo().toString());
+                listenError = err;
+                resolve(err);
+            });
+    });
 });
 afterAll(() => {
     server.close();
 });
 
 describe('Basic', () => {
-    it('Server listen', async () => {
+    it('Server listen', () => {
         expect.assertions(1);
-        return await new Promise(resolve => {
-            console.log("init start", performance.now());
-            server = httpserver
-                .listen(9990, (err) => {
-                    console.log("init done", performance.now());
-                    console.error(err);
-                    expect(err).not.toBeDefined();
-                    resolve();
-                });
-        });
+        console.error(listenError);
+        expect(listenError).not.toBeDefined();
     })
 });
+
+
+describe('CRUD static of', () => {
+    const storeObject = {test: 1, id: "1"},
+        storeObject2 = {test: 1, id: "2"},
+        BASE_URI = '/base/DummyModel';
+
+    beforeEach(() => {
+        moxios.install();
+    });
+    afterEach(() => {
+        moxios.uninstall();
+    });
+
+    it('CREATE', async () => {
+        await request(server)
+            .post(BASE_URI)
+            .send(storeObject)
+            .expect(200, storeObject);
+
+        await request(server)
+            .post(BASE_URI)
+            .send(storeObject2)
+            .expect(200, storeObject2);
+
+    });
+
+    it('UPDATE', async () => {
+        storeObject.test++;
+        await request(server)
+            .put(BASE_URI +"/"+ storeObject.id)
+            .send(storeObject)
+            .expect(200, storeObject);
+
+    });
+
+    it('DELETE', async () => {
+        await request(server)
+            .delete(BASE_URI +"/"+ storeObject.id)
+            .expect(200, storeObject);
+
+    });
+
+    it('READ', async () => {
+        await request(server)
+            .get(BASE_URI +"/"+ storeObject2.id)
+            .expect(200, storeObject2);
+
+    });
+
+    it('READ ALL', async () => {
+        await request(server)
+            .get(BASE_URI)
+            .expect(200, [storeObject2]);
+
+    });
+});
+
+// describe('CRUD', () => {
+//     const storeObject = {test: 1, id: "1"},
+//     storeObject2 = {test: 1, id: "2"},
+//     BASE_URI = '/base/crud-test';
+//
+//     beforeEach(() => {
+//         moxios.install();
+//     });
+//     afterEach(() => {
+//         moxios.uninstall();
+//     });
+//
+//     it('CREATE', async () => {
+//         await request(server)
+//             .post(BASE_URI)
+//             .send(storeObject)
+//             .expect(200, storeObject);
+//
+//         await request(server)
+//             .post(BASE_URI)
+//             .send(storeObject2)
+//             .expect(200, storeObject2);
+//
+//     });
+//
+//     it('READ ALL', async () => {
+//         await request(server)
+//             .get(BASE_URI)
+//             .expect(200, [storeObject, storeObject2]);
+//
+//     });
+//
+//     it('READ', async () => {
+//         await request(server)
+//             .get(BASE_URI +"/"+ storeObject.id)
+//             .expect(200, storeObject);
+//
+//     });
+//
+//     it('UPDATE', async () => {
+//         storeObject.test++;
+//         await request(server)
+//             .put(BASE_URI +"/"+ storeObject.id)
+//             .send(storeObject)
+//             .expect(200, storeObject);
+//
+//     });
+//
+//     it('DELETE', async () => {
+//         await request(server)
+//             .delete(BASE_URI +"/"+ storeObject.id)
+//             .expect(200, storeObject);
+//
+//     });
+// });

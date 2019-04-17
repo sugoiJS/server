@@ -326,10 +326,7 @@ export class HttpServer {
         // });
     }
 
-    private async handleModules(module, container: Container, graph = [],containerModulesObjects = {
-        asyncContainers: [],
-        containers: []
-    }): Promise<any> {
+    private async handleModules(module, container: Container, graph = []): Promise<any> {
                 const moduleMeta: IModuleMetadata = Reflect.getMetadata(this.moduleMetaKey, module) || {};
         let {services, modules, controllers} = moduleMeta;
         modules = modules || [];
@@ -337,20 +334,21 @@ export class HttpServer {
         if(graph.length === 0) {
             Injector.setContainer(this.container);
             services.unshift(Injector);
+            services.unshift({provide: this, useName: (<any>HttpServer), type: "constant"});
         }
-        this.registerServices(container.bind, container, ...services);
+        this.registerServices(container, ...services);
         HttpServer.updateGraph(graph, module.name);
         if (!container.isBound(module.name)) {
-            return await this.loadModule(module, container, modules, graph, containerModulesObjects);
+            return await this.loadModule(module, container, modules, graph);
         }
         else {
             return await this._asyncModules.get(module.name);
         }
     }
 
-    private loadModule(module: TNewable<IServerModule>, container: Container, modules: Array<TNewable<IServerModule>>,graph: string[],  containerModulesObjects) {
+    private loadModule(module: TNewable<IServerModule>, container: Container, modules: Array<TNewable<IServerModule>>,graph: string[]) {
         // Register the module for being singleton
-        this.registerServices(container.bind, container, {provide: module, type: "constant", useName: module.name});
+        this.registerServices(container, {provide: module, type: "constant", useName: module.name});
 
         // Resolve module for get all injected values
         const moduleInstance = container.resolve<IServerModule>(module);
@@ -361,11 +359,11 @@ export class HttpServer {
 
         if (res instanceof Promise) {
             res = res.then((res) => {
-                return Promise.all(modules.map( subModule => this.handleModules(subModule, container, [...graph], containerModulesObjects)));
+                return Promise.all(modules.map( subModule => this.handleModules(subModule, container, [...graph])));
             }) as any;
         }
         else {
-            res = Promise.all(modules.map(async subModule => this.handleModules(subModule, container, [...graph], containerModulesObjects))) as any;
+            res = Promise.all(modules.map(async subModule => this.handleModules(subModule, container, [...graph]))) as any;
         }
         if(res) {
             this._asyncModules.set(moduleInstance.constructor.name, res as any);
@@ -397,18 +395,18 @@ export class HttpServer {
         return new RouteInfo(getRouteInfo(this.container));
     }
 
-    private registerServices(bind, container: Container, ...services) {
+    private registerServices(container: Container, ...services) {
 
         for (let service of services) {
             try {
-                this.registerService(bind, container, service)
+                this.registerService(container, service)
             } catch (err) {
                 console.error(err);
             }
         }
     }
 
-    private registerService(bind, container, provider) {
+    private registerService(container, provider) {
         let providerName, type = 'singleton';
         if (provider.hasOwnProperty('provide')) {
             if (!provider.hasOwnProperty('useName')) {
@@ -459,12 +457,11 @@ export class HttpServer {
     }
 
     private static updateGraph(graph: string[], moduleName: string){
-        const found = graph.indexOf(moduleName) > -1;
-        graph.push(moduleName);
-        if (found) {
+        if (graph.indexOf(moduleName) > -1) {
             console.error("Circular dependencies detected while loading modules \n",graph.join(' --> '));
-            throw new Error("CIRCULAR DEPENDENCIES");
+            throw new Error("CIRCULAR DEPENDENCY");
         }
+        graph.push(moduleName);
     }
 
 }

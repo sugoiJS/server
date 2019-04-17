@@ -6,5 +6,6 @@ export const EXCEPTIONS: { [prop: string]: IExceptionConstant } = {
     GENERAL_SERVER_ERROR: {code: 5002,message: "Server error"},
     REQUEST_ARGUMENT_NOT_FOUND: {code: 5003,message: "Request argument not found"},
     POLICY_HANDLED_EXCEPTION: {code: 5004,message: "Policy handled exception"},
-    MISSING_PROPERTY: {code: 5005,message: "No %s property defined to service"}
+    MISSING_PROPERTY: {code: 5005,message: "No %s property defined to service"},
+    METHOD_NOT_ALLOWED: {code: 5006,message: "Method not allowed"}
 };

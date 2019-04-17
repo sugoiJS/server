@@ -2,19 +2,19 @@ import {Container, Injectable, interfaces} from "@sugoi/core";
 
 @Injectable()
 export class Injector{
-    private static Container: Container;
+    private static container: Container;
     private _container: Container;
 
     constructor(
     ){
-        this._container = Injector.Container;
+        this._container = Injector.container;
         const proxy = new Proxy(this._container,{});
         Object.assign(this, proxy);
     }
 
 
     static setContainer(container: Container) {
-        this.Container = container;
+        this.container = container;
     }
 
     get<T = any>(serviceIdentifier: interfaces.ServiceIdentifier<T>): T {
@@ -23,5 +23,9 @@ export class Injector{
 
     resolve<T = any>(constructorFunction: interfaces.Newable<T>): T{
         return this._container.resolve<T>(constructorFunction);
+    }
+
+    getContainer(): Container{
+        return this._container;
     }
 }
