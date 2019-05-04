@@ -3,8 +3,8 @@ import {ParametersValidatorUtil} from "../utils/parameters-validator.util";
 
 export type TStringOrNumber = string | number;
 
-export const HasRole = function (...requiredRole: TStringOrNumber[]){
-    return Authorized(requiredRole);
+export const HasRole = function (...requiredRoles: TStringOrNumber[]){
+    return Authorized(requiredRoles);
 };
 
 export const HasPermission = function (...permissions: TStringOrNumber[]){

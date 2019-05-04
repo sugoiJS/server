@@ -6,31 +6,38 @@ export class DummyModel {
     static db: Map<string, DummyModel> = new Map();
 
     save() {
-        DummyModel.db.set(this['id'], Object.assign({},this));
+        (<any>this.constructor).db.set(this['id'].toString(), Object.assign({},this));
         return this;
     }
 
     static updateById(id, data: any) {
         data.id = id;
-        DummyModel.db.set(data.id, {...data});
+        this.db.set( data.id.toString(), {...data});
         return data;
     }
 
     static removeById(id) {
-        const item = DummyModel.db.get(id);
-        DummyModel.db.delete(id);
+        const item = this.db.get(id.toString());
+        this.db.delete(id.toString());
         return item;
     }
 
     static findById(id) {
-        return DummyModel.db.get(id);
+        return this.db.get(id.toString());
     }
 
     static find() {
-        return Array.from(DummyModel.db.values());
+        return Array.from(this.db.values());
     }
 
 
+}
+
+export class DummyModelExtended extends DummyModel{
+    static db: Map<string, DummyModel> = new Map();
+    static getModelName(){
+        return 'DummyModel2';
+    }
 }
 
 // @CRUDController(DummyModel, '/crud-test')

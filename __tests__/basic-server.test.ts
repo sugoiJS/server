@@ -89,7 +89,6 @@ describe('CRUD static of', () => {
             .expect(200, storeObject);
 
     });
-
     it('READ', async () => {
         await request(server)
             .get(BASE_URI +"/"+ storeObject2.id)
@@ -105,6 +104,66 @@ describe('CRUD static of', () => {
     });
 });
 
+describe('CRUD static of 2', () => {
+    const storeObject = {test: 2, id: "11"},
+        storeObject2 = {test: 2, id: "22"},
+        BASE_URI = '/base/DummyModel2';
+
+    beforeEach(() => {
+        moxios.install();
+    });
+    afterEach(() => {
+        moxios.uninstall();
+    });
+
+    it('CREATE', async () => {
+        await request(server)
+            .post(BASE_URI)
+            .send(storeObject)
+            .expect(200, storeObject);
+
+        await request(server)
+            .post(BASE_URI)
+            .send(storeObject2)
+            .expect(200, storeObject2);
+
+    });
+
+    it('UPDATE', async () => {
+        storeObject.test++;
+        await request(server)
+            .put(BASE_URI +"/"+ storeObject.id)
+            .send(storeObject)
+            .expect(200, storeObject);
+
+    });
+
+    it('READ', async () => {
+        await request(server)
+            .get(BASE_URI +"/"+ storeObject2.id)
+            .expect(200, storeObject2);
+
+    });
+
+    it('DELETE PREVENTED', async () => {
+        await request(server)
+            .delete(BASE_URI +"/"+ storeObject.id)
+            .expect(403);
+
+    });
+
+    it('READ ALL', async () => {
+        await request(server)
+            .get(BASE_URI)
+            .expect(200, [storeObject,storeObject2]);
+
+    });
+
+});
+
+
+// Issue With routing not get registered
+//
 // describe('CRUD', () => {
 //     const storeObject = {test: 1, id: "1"},
 //     storeObject2 = {test: 1, id: "2"},

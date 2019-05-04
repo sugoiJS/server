@@ -1,6 +1,6 @@
 import {
-    Authorized,
     Controller,
+    Authorized,
     Request,
     ComparableSchema,
     SchemaTypes,

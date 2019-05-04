@@ -2,8 +2,7 @@ import {ModuleItem} from "./module-item.interface";
 import {IModuleMetadata} from "./module-meta.interface";
 import {IServerModule} from "./server-module.interface";
 import {TNewable} from "./newable.type";
-import {CRUDController} from "../index";
-import {ICRUDController} from "./crud-controller.interface";
+import { TCRUDController } from "../classes/crud-controller.class";
 
 export interface IProvider {
     provide: any,
@@ -14,7 +13,7 @@ export interface IProvider {
 }
 
 export interface IModuleMetadata {
-    controllers?: Array<ModuleItem<any> | ICRUDController<any>>;
+    controllers?: Array<ModuleItem<any> | TCRUDController>;
     services?: Array<ModuleItem<any> | IProvider>;
     modules?: Array<TNewable<IServerModule> | any>;
 }

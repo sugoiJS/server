@@ -4,6 +4,8 @@ import {Server} from "net";
 import * as path from "path";
 import {HttpServer, defaultErrorHandler} from "../index";
 import {Sub1Service} from "./app/submodule/sub1/sub1.service";
+import {CrudTest} from "./app/models/crud-test.model";
+
 const moxios = require('moxios');
 const request = require('supertest');
 
@@ -143,6 +145,41 @@ describe("auth policy check", () => {
             .expect(200, {valid: true});
     })
 
+});
+
+describe("CRUD auth policy check", () => {
+    const baseUri = "/CrudTesting/";
+    const storeObject = {test: 1, id: "1"};
+    const storeObject2 = {test: 2, id: "2"};
+    beforeEach(async () => {
+        moxios.install();
+        await request(server)
+            .post(baseUri)
+            .send(storeObject);
+
+        await request(server)
+            .post(baseUri)
+            .send(storeObject2);
+    });
+    afterEach(() => {
+        moxios.uninstall();
+    });
+    it("#get /CrudTesting", async () => {
+        await request(server)
+            .get(baseUri + "2")
+            .expect(401, responses.unauthorized);
+
+
+        // await request(server)
+        //     .get(baseUri + "1")
+        //     .set(sugoiHeader, "34")
+        //     .expect(403);
+
+        await request(server)
+            .get(baseUri + "1")
+            .set(sugoiHeader, "34")
+            .expect(200, storeObject);
+    });
 });
 
 describe("inject check", () => {
