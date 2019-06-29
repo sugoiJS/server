@@ -8,6 +8,9 @@ export * from "./responses/index";
  */
 import {ParametersValidatorUtil} from "./utils/parameters-validator.util";
 import {AuthorizationUtils} from "./utils/authorization.utils";
+import {getConfiguration, setConfiguration, ConfigurationTypes} from "@sugoi/core";
+
+export {getConfiguration, setConfiguration, ConfigurationTypes};
 
 /**
  * MODULE EXPORTS
@@ -40,10 +43,18 @@ export {IModuleMetadata} from "./interfaces/module-meta.interface";
 
 export {IExpressCallback} from "./interfaces/express-callback.interface";
 
-export {HttpServer} from "./classes/http-server.class";
+export {HttpServer, SUG_CONFIGURATION} from "./classes/http-server.class";
 
 export {ModuleItem} from "./interfaces/module-item.interface";
 
 export * from "./decorators";
 
 export {CRUDController,CRUDControllerFactory} from "./classes/crud-controller.class";
+
+export {ISecurityConfiguration} from "./interfaces/security.interface";
+
+export {IConfiguration} from "./interfaces/configuration.interface";
+
+import * as express from 'express';
+
+export {express}

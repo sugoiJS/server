@@ -3,7 +3,7 @@ import {ParametersValidatorUtil} from "./parameters-validator.util";
 import {SugoiPolicyError} from "@sugoi/core/dist/policies/exceptions/policy-error.exception";
 import {AuthProvider} from "../classes/auth-provider.class";
 import {EXCEPTIONS} from "../constants/exceptions.constant";
-import {TStringOrNumber} from "../decorators/authorization-policy.decorator";
+import {TStringOrNumber} from "../decorators";
 
 
 export class AuthorizationUtils {
@@ -24,8 +24,9 @@ export class AuthorizationUtils {
         if (request) {
             provider = request["AuthProvider"];
         }
-        if (!request || !provider)
-            throw new SugoiPolicyError("Unable to get provider", 5005);
+        if (!request || !provider) {
+            return Promise.resolve(true);
+        }
         payload["request"] = request;
         return await provider.isAuthenticated(request)
             .then((res) => {

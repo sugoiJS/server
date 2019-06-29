@@ -13,16 +13,16 @@ export const defaultErrorHandler = (returnErrorStack: boolean = true): ErrorRequ
             res.status(400).json(err);
         }
         else {
-            sendRes(res, cloneError(err))
+            sendRes(res, cloneError(err, false))
         }
         return next();
     }
 };
 
-function cloneError(error: any): GenericError {
+function cloneError(error: any, verbose: boolean = true): GenericError {
     let code = error.status || error.code || 500;
     const data = "data" in error && error.data ? error.data : [];
-    const err = new GenericError(error.message, code, data);
+    const err = new GenericError(error.message, code, data, verbose);
     err.stack = error.stack;
     return err;
 }
