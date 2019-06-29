@@ -159,10 +159,9 @@ describe('CRUD static of 2', () => {
 });
 describe('Hooks check', () => {
     const storeObject = {test: 2, id: "11"},
-        BASE_URI = '/base/DummyModel';
+        BASE_URI = '/base/bootstrap2/HookChecker';
 
     beforeEach(() => {
-        DummyModel.db.clear();
         moxios.install();
     });
     afterEach(() => {
@@ -178,7 +177,7 @@ describe('Hooks check', () => {
         expect(DummyModel['hookChecker']).toEqual(storeObject.id);
         await request(server)
             .get(BASE_URI)
-            .expect(200, [storeObject]);
+            .expect(200);
         expect(DummyModel['hookChecker']).not.toBeDefined();
 
 

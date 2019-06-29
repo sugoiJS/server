@@ -6,13 +6,15 @@ import {DummyModel} from "../controllers/crud.controller";
 export class Hooks {
 
 
-    @BeforeHook('*', HTTP_METHOD.POST)
+    @BeforeHook('base/bootstrap2/HookChecker', HTTP_METHOD.POST)
     beforeCrud(req, res, next) {
+        try{
         DummyModel['hookChecker'] = req.body.id;
+        }catch(e){}
         next()
     }
 
-    @AfterHook('*', HTTP_METHOD.GET)
+    @AfterHook('base/bootstrap2/HookChecker', HTTP_METHOD.GET)
     afterCrud(req,
               res,
               next) {

@@ -1,6 +1,7 @@
-import {Controller, HttpGet, Timeout} from "../../../../index";
+import {Controller, HttpPost, HttpGet, Timeout} from "../../../../index";
 import {Inject} from "@sugoi/core";
 import {Bootstrap2Service} from "./bootstrap-2.service";
+import { RequestBody } from "../../../../decorators";
 
 @Controller('/bootstrap2')
 export class Bootstrap2Controller {
@@ -11,6 +12,11 @@ export class Bootstrap2Controller {
     @HttpGet('/')
     public index() {
         return this.service.index();
+    }
+    @HttpGet('/HookChecker')
+    @HttpPost('/HookChecker')
+    public hookChecker(@RequestBody() body){
+        return body;
     }
 
     @HttpGet('/timeout')
