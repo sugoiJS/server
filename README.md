@@ -21,6 +21,8 @@ SugoiJS server uses [inversify](https://www.npmjs.com/package/inversify), [inver
 
 > npm install --save @sugoi/server
 
+or use @sugoi/cli
+
 ### tsconfig.json:
 
 Under your tsconfig - compilerOptions set:

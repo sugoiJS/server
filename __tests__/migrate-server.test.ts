@@ -6,8 +6,7 @@ import * as path from "path";
 import * as express from "express";
 import {SugoiServerError} from "../exceptions/server.exception";
 import {Sub1Service} from "./app/submodule/sub1/sub1.service";
-import {Sub1Module} from "./app/submodule/sub1/sub1.module";
-// import * as rp from "request-promise";
+import {defaultErrorHandler} from "../utils/default-error-handler.util";
 const moxios = require('moxios');
 const request = require('supertest');
 
@@ -45,7 +44,6 @@ beforeAll(async () => {
     await new Promise(resolve => {
         app = express() as express.Application;
         app.use((req,res,next)=>{
-            console.log("express middleware called");
             req.app.locals["test"] = req.headers["id"] ? 2 : 1;
             next();
         });
@@ -55,17 +53,14 @@ beforeAll(async () => {
          httpserver = HttpServer.initializeFrom(app,Bootstrap, AuthService)
             .setStatic(path.resolve(__dirname, "../static"))
             .setMiddlewares((app) => {
+                app.use(express.json());
                 app.use((req, res, next) => {
                     (<AuthService>req['AuthProvider']).getUser(req, res, next);
                     next();
                 });
             })
-            .setErrorHandlers((app) => {
-                app.use((err: SugoiServerError, req, res, next) => {
-                    // console.error(err.code + " - " + err.message);
-                    delete err.stack;
-                    res.status(err.code).send(err);
-                })
+            .setErrorHandlers((app)=>{
+                app.use(defaultErrorHandler(false));
             })
             .build();
 

@@ -12,7 +12,7 @@
     "update:patch": "npm version patch && npm publish && npm run docs",
     "update:minor": "npm version minor && npm publish && npm run docs",
     "update:major": "npm version major && npm publish && npm run docs",
-    "build": "rmdir /s dist && tsc"
+    "build": "rimraf dist && tsc"
   },
   "files": [
     "dist/**/*"
@@ -43,22 +43,22 @@
   "author": "Orel Balilti",
   "license": "MIT",
   "dependencies": {
-    "@sugoi/core": "^3.2.2",
+    "@sugoi/core": "^4.0.0",
     "express": "^4.16.4",
+    "helmet": "^3.18.0",
     "inversify-express-utils": "^6.3.2"
   },
   "devDependencies": {
+    "@sugoi/orm": "^3.1.1",
     "@types/express": "^4.16.1",
-    "@types/jest": "^23.3.14",
-    "@types/node": "^10.12.21",
-    "axios": "^0.18.0",
+    "@types/helmet": "0.0.43",
+    "@types/jest": "^24.0.13",
+    "@types/node": "^12.0.10",
+    "axios": "^0.19.0",
     "jest": "^24.5.0",
     "moxios": "^0.4.0",
-    "supertest": "^3.4.2",
-    "ts-jest": "^23.10.5"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "coverageDirectory": "./dist/coverage"
+    "rimraf": "^2.6.3",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.0.2"
   }
 }

@@ -2,9 +2,9 @@ import {AuthService} from "./app/services/auth.service";
 import {Bootstrap} from "./app/app";
 import {Server} from "net";
 import * as path from "path";
-import {HttpServer, defaultErrorHandler} from "../index";
+import {HttpServer, defaultErrorHandler, ModuleMetaKey} from "../index";
 import {Sub1Service} from "./app/submodule/sub1/sub1.service";
-import {CrudTest} from "./app/models/crud-test.model";
+import * as express from 'express';
 
 const moxios = require('moxios');
 const request = require('supertest');
@@ -40,9 +40,10 @@ const responses = {
 const sugoiHeader = "x-sug-auth";
 beforeAll(async () => {
     await new Promise(resolve => {
-        httpserver = HttpServer.init(Bootstrap, "/", null, AuthService)
+        httpserver = HttpServer.init(Bootstrap, "/", AuthService)
             .setStatic(path.resolve(__dirname, "../static"))
             .setMiddlewares((app) => {
+                app.use(express.json());
                 app.use((req, res, next) => {
                     (<AuthService>req['AuthProvider']).getUser(req, res, next);
                     next();
@@ -67,7 +68,7 @@ describe("basic httpserver logic", () => {
     });
 
     it("namespace validation", () => {
-        expect(HttpServer.init(Bootstrap, "/testing", "test").getNamespace()).toBe("test");
+        expect(HttpServer.init(Bootstrap, "/testing").getNamespace()).toBe(ModuleMetaKey);
     });
 
     it("resolving route info",()=>{
@@ -153,13 +154,18 @@ describe("CRUD auth policy check", () => {
     const storeObject2 = {test: 2, id: "2"};
     beforeEach(async () => {
         moxios.install();
-        await request(server)
-            .post(baseUri)
-            .send(storeObject);
 
         await request(server)
             .post(baseUri)
-            .send(storeObject2);
+            .set(sugoiHeader, "34")
+            .send(storeObject)
+            .expect(200, storeObject);
+
+        await request(server)
+            .post(baseUri)
+            .set(sugoiHeader, "34")
+            .send(storeObject2)
+            .expect(200, storeObject2);
     });
     afterEach(() => {
         moxios.uninstall();

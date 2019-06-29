@@ -1,19 +1,22 @@
-import {BeforeHook, Next, RequestBody} from "../../../decorators";
+import {AfterHook, BeforeHook, Next, Request, RequestBody, Response} from "../../../decorators";
 import {HTTP_METHOD} from "../../../constants/methods.constant";
+import {DummyModel} from "../controllers/crud.controller";
 
 
-class Hooks {
+export class Hooks {
 
 
     @BeforeHook('*', HTTP_METHOD.POST)
-    beforeCrud(@RequestBody() body: any, @Next() next) {
-        body.timestamp = new Date().getTime()
-        next();
+    beforeCrud(req, res, next) {
+        DummyModel['hookChecker'] = req.body.id;
+        next()
     }
 
-    @BeforeHook('*', HTTP_METHOD.GET)
-    afterCrud(req, res, next) {
-
+    @AfterHook('*', HTTP_METHOD.GET)
+    afterCrud(req,
+              res,
+              next) {
+        delete DummyModel['hookChecker'];
         next()
     }
 }

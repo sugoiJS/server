@@ -6,13 +6,13 @@ export class DummyModel {
     static db: Map<string, DummyModel> = new Map();
 
     save() {
-        (<any>this.constructor).db.set(this['id'].toString(), Object.assign({},this));
+        (<any>this.constructor).db.set(this['id'].toString(), Object.assign({}, this));
         return this;
     }
 
     static updateById(id, data: any) {
         data.id = id;
-        this.db.set( data.id.toString(), {...data});
+        this.db.set(data.id.toString(), {...data});
         return data;
     }
 
@@ -30,16 +30,12 @@ export class DummyModel {
         return Array.from(this.db.values());
     }
 
-
 }
 
-export class DummyModelExtended extends DummyModel{
+export class DummyModelExtended extends DummyModel {
     static db: Map<string, DummyModel> = new Map();
-    static getModelName(){
+
+    static getModelName() {
         return 'DummyModel2';
     }
-}
-
-// @CRUDController(DummyModel, '/crud-test')
-export class CrudController{
 }

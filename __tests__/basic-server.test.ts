@@ -4,6 +4,7 @@ import * as path from "path";
 import * as express from "express";
 import {HttpServer, defaultErrorHandler} from "../index";
 import {Bootstrap2Module} from "./app/submodule/bootstrap-2/bootstrap-2.module";
+import {DummyModel} from "./app/controllers/crud.controller";
 
 const moxios = require('moxios');
 const request = require('supertest');
@@ -12,7 +13,7 @@ let server: Server, httpserver: HttpServer, listenError;
 
 
 beforeAll(async () => {
-    httpserver = HttpServer.init(Bootstrap2Module, "/base", null, AuthService)
+    httpserver = HttpServer.init(Bootstrap2Module, "/base", AuthService)
         .setStatic(path.resolve(__dirname, "../static"))
         .setMiddlewares((app) => {
             app.use(express.json());
@@ -26,11 +27,8 @@ beforeAll(async () => {
         })
         .build();
     return await new Promise(resolve => {
-        const start = performance.now();
         server = httpserver
             .listen(19998, (err) => {
-                console.debug('basic test loaded, err: %s, init duration: %s', err, performance.now() - start);
-                console.log(httpserver.getRouteInfo().toString());
                 listenError = err;
                 resolve(err);
             });
@@ -43,7 +41,6 @@ afterAll(() => {
 describe('Basic', () => {
     it('Server listen', () => {
         expect.assertions(1);
-        console.error(listenError);
         expect(listenError).not.toBeDefined();
     })
 });
@@ -160,62 +157,63 @@ describe('CRUD static of 2', () => {
     });
 
 });
+describe('Hooks check', () => {
+    const storeObject = {test: 2, id: "11"},
+        BASE_URI = '/base/DummyModel';
+
+    beforeEach(() => {
+        DummyModel.db.clear();
+        moxios.install();
+    });
+    afterEach(() => {
+        moxios.uninstall();
+    });
+
+    it('CREATE', async () => {
+        await request(server)
+            .post(BASE_URI)
+            .send(storeObject)
+            .expect(200, storeObject);
+
+        expect(DummyModel['hookChecker']).toEqual(storeObject.id);
+        await request(server)
+            .get(BASE_URI)
+            .expect(200, [storeObject]);
+        expect(DummyModel['hookChecker']).not.toBeDefined();
 
 
-// Issue With routing not get registered
-//
-// describe('CRUD', () => {
-//     const storeObject = {test: 1, id: "1"},
-//     storeObject2 = {test: 1, id: "2"},
-//     BASE_URI = '/base/crud-test';
-//
-//     beforeEach(() => {
-//         moxios.install();
-//     });
-//     afterEach(() => {
-//         moxios.uninstall();
-//     });
-//
-//     it('CREATE', async () => {
-//         await request(server)
-//             .post(BASE_URI)
-//             .send(storeObject)
-//             .expect(200, storeObject);
-//
-//         await request(server)
-//             .post(BASE_URI)
-//             .send(storeObject2)
-//             .expect(200, storeObject2);
-//
-//     });
-//
-//     it('READ ALL', async () => {
-//         await request(server)
-//             .get(BASE_URI)
-//             .expect(200, [storeObject, storeObject2]);
-//
-//     });
-//
-//     it('READ', async () => {
-//         await request(server)
-//             .get(BASE_URI +"/"+ storeObject.id)
-//             .expect(200, storeObject);
-//
-//     });
-//
-//     it('UPDATE', async () => {
-//         storeObject.test++;
-//         await request(server)
-//             .put(BASE_URI +"/"+ storeObject.id)
-//             .send(storeObject)
-//             .expect(200, storeObject);
-//
-//     });
-//
-//     it('DELETE', async () => {
-//         await request(server)
-//             .delete(BASE_URI +"/"+ storeObject.id)
-//             .expect(200, storeObject);
-//
-//     });
-// });
+    });
+});
+
+
+describe('Timeout', () => {
+    const storeObject = {test: 2, id: "11"},
+        BASE_URI = '/base/bootstrap2/';
+
+    beforeEach(() => {
+
+        moxios.install();
+    });
+    afterEach(() => {
+        moxios.uninstall();
+    });
+
+    it('timeout', async () => {
+        return await request(server)
+            .get(BASE_URI+"timeout")
+            .expect(504);
+    });
+
+    it('timeoutSuccess', async () => {
+        return await request(server)
+            .get(BASE_URI+"timeoutSuccess")
+            .expect(200);
+    });
+
+    it('no timeout', async () => {
+        return await request(server)
+            .get(BASE_URI+"NoTimeout")
+            .expect(200);
+    });
+
+});
