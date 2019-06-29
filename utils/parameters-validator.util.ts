@@ -26,4 +26,9 @@ export class ParametersValidatorUtil {
     static getRequestFromArgs(args){
         return args.find(arg => arg && arg.constructor && arg.constructor.name === 'IncomingMessage')
     }
+
+
+    static getResponseFromArgs(args){
+        return args.find(arg => arg && arg.constructor && arg.constructor.name === 'ServerResponse')
+    }
 }
