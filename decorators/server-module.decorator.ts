@@ -7,13 +7,12 @@ import {decorate,Injectable} from "@sugoi/core"
  * load by this module
  *
  * @param {IModuleMetadata} metadata
- * @param {string} namespaceKey
  * @returns {(item: any) => any}
  * @constructor
  */
-const ServerModule = function(metadata?: IModuleMetadata,namespaceKey:string = ModuleMetaKey) {
+const ServerModule = function(metadata?: IModuleMetadata) {
     return function (item:any) {
-        Reflect.defineMetadata(namespaceKey, metadata, item);
+        Reflect.defineMetadata(ModuleMetaKey, metadata, item);
         decorate(Injectable(),item)
     }
 };
