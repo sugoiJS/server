@@ -7,7 +7,7 @@ export const HasRole = function (...requiredRoles: TStringOrNumber[]){
     return Authorized(requiredRoles);
 };
 
-export const HasPermission = function (...permissions: TStringOrNumber[]){
+export const HasPermissions = function (...permissions: TStringOrNumber[]){
     return Authorized(null, permissions);
 };
 

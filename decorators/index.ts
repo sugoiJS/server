@@ -1,8 +1,14 @@
+export {Timeout} from "./timeout.decorator";
+
 export * from "./express-utils.decorator";
+
+export {BeforeHook, AfterHook} from "./hooks.decorator";
 
 export {ServerModule} from "./server-module.decorator";
 
-export {Authorized, HasPermission, HasRole} from "./authorization-policy.decorator";
+export {TStringOrNumber} from "./authorization-policy.decorator";
+
+export {Authorized, HasPermissions, HasRole} from "./authorization-policy.decorator";
 
 export {
     RequestBodySchemaPolicy,
@@ -11,5 +17,3 @@ export {
     RequestQueryParamsSchemaPolicy,
     RequestSchemaPolicy
 } from "./request-schema-policy.decorator";
-
-
