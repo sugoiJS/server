@@ -1,5 +1,6 @@
 import {HTTP_METHOD} from "../constants/methods.constant";
 import {HttpServer} from "../classes/http-server.class";
+import { express } from "..";
 const END_EVENT = 'finish';
 
 
@@ -44,7 +45,7 @@ export function applyBeforeHooks(app, callbacksObject) {
         Object.keys(callbacksObject[path]).forEach((method: HTTP_METHOD) => {
             const callbacks = getCallbacksFromObject(callbacksObject, path, method);
             callbacks.sort((a, b) => a.priority - b.priority);
-            applyHook(app, path, method, ...callbacks);
+            applyHook(app, path, method, express.json(),...callbacks);
         })
     })
 }

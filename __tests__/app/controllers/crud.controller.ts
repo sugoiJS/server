@@ -4,7 +4,7 @@ import {
 
 export class DummyModel {
     static db: Map<string, DummyModel> = new Map();
-
+    static hookChecker;
     save() {
         (<any>this.constructor).db.set(this['id'].toString(), Object.assign({}, this));
         return this;
