@@ -1,3 +1,9 @@
+#### 4.0.1 (2019-07-07)
+
+##### New Features
+
+* **category:**  castTo middleware added ([8f5f38ba](https://github.com/sugoiJS/server/commit/8f5f38ba3680b045c4728b1370647aa9a8c2a079))
+
 #### 4.0.0 (2019-07-01)
 
 ##### Breaking Changes
