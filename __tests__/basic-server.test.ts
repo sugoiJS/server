@@ -184,6 +184,16 @@ describe('Hooks check', () => {
     });
 });
 
+describe('Caster',()=>{
+    const BASE_URI = '/base/bootstrap2/cast';
+    it("#post /sub1/cast", async () => {
+        const user = {name: "tester"};
+        await request(server)
+            .post(BASE_URI)
+            .send(user)
+            .expect(200, {valid: true, user: Object.assign({id: '123'}, user)});
+    });
+})
 
 describe('Timeout', () => {
     const storeObject = {test: 2, id: "11"},

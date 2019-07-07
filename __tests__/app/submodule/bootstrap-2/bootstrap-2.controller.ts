@@ -1,7 +1,8 @@
-import {Controller, HttpPost, HttpGet, Timeout} from "../../../../index";
+import {Controller, HttpPost, HttpGet, Timeout, castBodyTo} from "../../../../index";
 import {Inject} from "@sugoi/core";
 import {Bootstrap2Service} from "./bootstrap-2.service";
 import { RequestBody } from "../../../../decorators";
+import { User } from "../../classes/user.class";
 
 @Controller('/bootstrap2')
 export class Bootstrap2Controller {
@@ -13,6 +14,14 @@ export class Bootstrap2Controller {
     public index() {
         return this.service.index();
     }
+
+    @HttpPost("/cast", castBodyTo(User, {applyConstructor: true}))
+    public async castToCheck(
+        @RequestBody() body: User
+    ) {
+        return {valid: body instanceof User, user: body}
+    }
+
     @HttpGet('/HookChecker')
     @HttpPost('/HookChecker')
     public hookChecker(@RequestBody() body){

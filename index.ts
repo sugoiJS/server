@@ -49,6 +49,8 @@ export {ModuleItem} from "./interfaces/module-item.interface";
 
 export * from "./decorators";
 
+export * from "./middlewares";
+
 export {CRUDController,CRUDControllerFactory} from "./classes/crud-controller.class";
 
 export {ISecurityConfiguration} from "./interfaces/security.interface";
