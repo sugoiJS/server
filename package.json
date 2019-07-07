@@ -5,8 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "jest --config=jest.config.js --coverage --detectOpenHandles",
-    "coverage": "jest  --config=jest.config.js --coverage --coverageReporters=text-lcov  --detectOpenHandles | curl -s https://codecov.io/bash | bash",
+    "test": "jest --config=jest.config.js --coverage --detectOpenHandles --coverageReporters=text-lcov | curl -s https://codecov.io/bash | bash",
     "docs": "..\\node_modules\\.bin\\typedoc --out ..\\dist\\docs\\server --excludeNotExported --excludeProtected --excludePrivate --readme .\\README.md --mode file --hideGenerator",
     "build:publish": "npm run build && npm test",
     "update:patch": "npm version patch && npm publish && npm run docs",

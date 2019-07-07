@@ -14,5 +14,5 @@ before_install:
 install:
   - npm ci
 script:
-  - npm run build:publish
-after_success: npm run coverage
+  - npm run build
+after_success: npm run test
