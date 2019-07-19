@@ -316,7 +316,7 @@ export class HttpServer {
                     return promise.then(res => {
                         listener.listen(port, hostname, err => {
                             if (!err) {
-                                console.log(SUGOI_INIT_MSG, port, process.env.NODE_ENV);
+                                console.log(SUGOI_INIT_MSG, port, process.env.NODE_ENV || 'development');
                             }
                             
                             callback(err);
