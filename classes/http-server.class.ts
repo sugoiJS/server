@@ -108,9 +108,9 @@ export class HttpServer {
             this.moduleMetaKey = moduleMetaKey;
             this.loadModules(module, this._container);
             if (!this.listenerInstance) {
-                this._serverInstance = new InversifyExpressServer(this._container as any, null, {rootPath: rootPath as string}, null, authProvider, false);
+                this._serverInstance = new InversifyExpressServer(this._container as any, express(), {rootPath: rootPath as string}, null, authProvider, false);
             } else {
-                this._serverInstance = new InversifyExpressServer(this._container as any, null, null, rootPath as express.Application, authProvider, false);
+                this._serverInstance = new InversifyExpressServer(this._container as any, express(), null, rootPath as express.Application, authProvider, false);
             }
             
         }
